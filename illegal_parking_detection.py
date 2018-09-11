@@ -12,33 +12,140 @@ import numpy as np
 import cv2
 from matplotlib import pyplot as plt
 
-test_path = os.getcwd()
-idx = 0
-image_file = 'images/frames/ISLab-13-' + str(idx) + '.jpg'
-image = Image.open(os.path.join(test_path, image_file))
-yolo = YOLO()
-out_boxes, out_scores, out_classes = yolo.detect_image(image, True)
 
-cvimage = np.asarray(image)
+class Region(object):
+    def __init__(self, box):
+        top, left, bottom, right = box
+        self.top = max(0, np.floor(top + 0.5).astype('int32'))
+        self.left = max(0, np.floor(left + 0.5).astype('int32'))
+        self.bottom = min(image.size[1], np.floor(bottom + 0.5).astype('int32'))
+        self.right = min(image.size[0], np.floor(right + 0.5).astype('int32'))
+        self.tracked = True
+        self.parked_time = 0
+        self.occluded_time = 0
+
+    def get_box(self):
+        box = np.array([self.top, self.left, self.bottom, self.right], dtype=np.float32)
+        return box
+
+    def get_iou(self, boxB):
+        # determine the (x, y)-coordinates of the intersection rectangle
+        boxA = self.get_box()
+        boxB = boxB.get_box()
+
+        xA = max(boxA[0], boxB[0])
+        yA = max(boxA[1], boxB[1])
+        xB = min(boxA[2], boxB[2])
+        yB = min(boxA[3], boxB[3])
+
+        # compute the area of intersection rectangle
+        interArea = max(0, xB - xA + 1) * max(0, yB - yA + 1)
+
+        # compute the area of both the prediction and ground-truth
+        # rectangles
+        boxAArea = (boxA[2] - boxA[0] + 1) * (boxA[3] - boxA[1] + 1)
+        boxBArea = (boxB[2] - boxB[0] + 1) * (boxB[3] - boxB[1] + 1)
+
+        # compute the intersection over union by taking the intersection
+        # area and dividing it by the sum of prediction + ground-truth
+        # areas - the interesection area
+        iou = interArea / float(boxAArea + boxBArea - interArea)
+        return iou
+
+    def find_region(self, region_list):
+        max_iou = 0
+        max_idx = 0
+        for i in range(len(region_list)):
+            iou = self.get_iou(region_list[i])
+            if iou > max_iou:
+                max_iou = iou
+                max_idx = i
+        if max_iou > MAP_REGION_THRESHOLD:
+            return max_idx
+        else:
+            return -1
+
+    def __str__(self):
+        return "Region:: top:%d left:%d bottom:%d right:%d, parked: %d occluded: %d tracked: %d" % (
+        self.top, self.left, self.bottom, self.right, self.parked_time, self.occluded_time, self.tracked)
+
+
+yolo = YOLO()
+MATHCH_TEMPLATE_THRESHOLD = 0.7
+SEE_FRAMES_THRESHOLD = 3
+MAP_REGION_THRESHOLD = 0.7
+
+test_path = os.path.join(os.getcwd(), 'images', 'frames')
+frame_cnt = 0
+for fn in os.listdir(test_path):
+    frame_cnt += 1
+
+region_list = []
+illegal_list = []
+
+# vehicle detection for frame 0
+frame_path = os.path.join(test_path, 'ISLab-13-0.jpg')
+image = Image.open(os.path.join(test_path, frame_path))
+out_boxes, out_scores, out_classes = yolo.detect_image(image, True)
 for i in range(len(out_boxes)):
-    if yolo.class_names[out_classes[i]] == 'car':
-        top, left, bottom, right = out_boxes[i]
-        top = max(0, np.floor(top + 0.5).astype('int32'))
-        left = max(0, np.floor(left + 0.5).astype('int32'))
-        bottom = min(image.size[1], np.floor(bottom + 0.5).astype('int32'))
-        right = min(image.size[0], np.floor(right + 0.5).astype('int32'))
-        template = cvimage[top:bottom, left:right]
-        template = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
-        # new_image_name = os.path.join(test_path, 'images', str(i) + ' ' + str(top) + ',' + str(bottom) + ';' + str(left) + ',' + str(right) + '.jpg')
-        new_image_name = os.path.join(test_path, 'images', str(i) + '.jpg')
-        # cv2.imwrite(new_image_name, template)
-        img = cv2.imread('images/frames/ISLab-13-25.jpg', 0)
-        img2 = img.copy()
-        w, h = template.shape[::-1]
-        res = cv2.matchTemplate(img, template, cv2.TM_CCOEFF_NORMED)
-        min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
-        top_left = max_loc
-        bottom_right = (top_left[0] + w, top_left[1] + h)
-        print(i)
-        print(left, top, right, bottom)
-        print(top_left, bottom_right)
+    if yolo.class_names[out_classes[i]] == 'car':  # TODO: Add other types of vehicles
+        region = Region(out_boxes[i])
+        region_list.append(region)
+
+for idx in range(1, frame_cnt):
+    prev_frame_path = os.path.join(test_path, 'ISLab-13-' + str((idx - 1) * 25) + '.jpg')  # previous frame
+    curr_frame_path = os.path.join(test_path, 'ISLab-13-' + str(idx * 25) + '.jpg')  # current frame
+    # image = Image.open(os.path.join(test_path, prev_frame_path))
+    # out_boxes, out_scores, out_classes = yolo.detect_image(image, True)
+    cvimage = np.asarray(image)  # image here is the previous image
+
+    # template matching
+    for r in region_list:
+        if r.occluded_time == -1:
+            continue
+        else:
+            template = cvimage[r.top:r.bottom, r.left:r.right]
+            template = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
+            img = cv2.imread(curr_frame_path, 0)
+            w, h = template.shape[::-1]
+            res = cv2.matchTemplate(img, template, cv2.TM_CCOEFF_NORMED)
+            min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
+            top_left = max_loc
+
+            top = max_loc[1]
+            left = max_loc[0]
+            bottom = max_loc[1] + h
+            right = max_loc[0] + w
+
+            matched_box = np.array([top, left, bottom, right], dtype=np.float32)
+            matched_region = Region(matched_box)
+            iou = r.get_iou(matched_region)
+
+            if iou > MATHCH_TEMPLATE_THRESHOLD:
+                if r.tracked:
+                    r.parked_time += 1
+                else:
+                    r.tracked = True
+                    r.parked_time = r.parked_time + r.occluded_time + 1
+                    r.occluded_time = 0
+            else:
+                if r.tracked:
+                    r.occluded_time += 1
+                    r.tracked = False
+                    r.occluded_time += 1
+                else:
+                    if r.occluded_time > SEE_FRAMES_THRESHOLD:
+                        r.occluded_time = -1  # delete the vehicle
+                    else:
+                        r.occluded_time += 1
+
+    # vehicle detection for current frame
+    image = Image.open(curr_frame_path)
+    out_boxes, out_scores, out_classes = yolo.detect_image(image, True)
+    for i in range(len(out_boxes)):
+        if yolo.class_names[out_classes[i]] == 'car':  # TODO: Add other types of vehicles
+            region = Region(out_boxes[i])
+            # judge whether the detected region is already in two lists
+            r_idx = region.find_region(region_list)
+            if r_idx == -1:  # TODO: I need to take a second thought here!!! (add 1s???)
+                region_list.append(region)
