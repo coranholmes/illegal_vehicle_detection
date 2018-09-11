@@ -99,7 +99,7 @@ class YOLO(object):
                 score_threshold=self.score, iou_threshold=self.iou)
         return boxes, scores, classes
 
-    def detect_image(self, image):
+    def detect_image(self, image, inner_res=False):
         start = timer()
 
         if self.model_image_size != (None, None):
@@ -123,6 +123,9 @@ class YOLO(object):
                 self.input_image_shape: [image.size[1], image.size[0]],
                 K.learning_phase(): 0
             })
+
+        if inner_res:
+            return out_boxes, out_scores, out_classes
 
         print('Found {} boxes for {}'.format(len(out_boxes), 'img'))
 
