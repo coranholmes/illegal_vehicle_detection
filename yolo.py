@@ -99,7 +99,7 @@ class YOLO(object):
                 score_threshold=self.score, iou_threshold=self.iou)
         return boxes, scores, classes
 
-    def detect_image(self, image, inner_res=False):
+    def detect_image(self, image):
         start = timer()
 
         if self.model_image_size != (None, None):
@@ -124,9 +124,6 @@ class YOLO(object):
                 K.learning_phase(): 0
             })
 
-        if inner_res:
-            return out_boxes, out_scores, out_classes
-
         print('Found {} boxes for {}'.format(len(out_boxes), 'img'))
 
         font = ImageFont.truetype(font='font/FiraMono-Medium.otf',
@@ -147,7 +144,7 @@ class YOLO(object):
             left = max(0, np.floor(left + 0.5).astype('int32'))
             bottom = min(image.size[1], np.floor(bottom + 0.5).astype('int32'))
             right = min(image.size[0], np.floor(right + 0.5).astype('int32'))
-            print(label, (left, top), (right, bottom))
+            # print(label, (left, top), (right, bottom))
 
             if top - label_size[1] >= 0:
                 text_origin = np.array([left, top - label_size[1]])
@@ -167,7 +164,7 @@ class YOLO(object):
 
         end = timer()
         print(end - start)
-        return image
+        return image, out_boxes, out_scores, out_classes
 
     def close_session(self):
         self.sess.close()

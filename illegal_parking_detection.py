@@ -6,7 +6,7 @@
 
 
 from yolo import YOLO, detect_video
-from PIL import Image
+from PIL import Image, ImageFont, ImageDraw
 import os
 import numpy as np
 import cv2
@@ -69,9 +69,10 @@ class Region(object):
         self.top, self.left, self.bottom, self.right, self.parked_time, self.occluded_time, self.tracked)
 
 
-MATCH_TEMPLATE_THRESHOLD = 0.8
+MATCH_TEMPLATE_THRESHOLD = 0.7
 SEE_FRAMES_THRESHOLD = 5
-MAP_REGION_THRESHOLD = 0.8
+MAP_REGION_THRESHOLD = 0.7
+ILLEGAL_PARKED_THRESHOLD = 5
 VEHICLES = ['car']  # TODO: Add other types of vehicles
 
 test_path = os.path.join(os.getcwd(), 'images', 'frames')
@@ -86,17 +87,16 @@ illegal_list = []
 yolo = YOLO()
 frame_path = os.path.join(test_path, 'ISLab-13-0.jpg')
 image = Image.open(os.path.join(test_path, frame_path))
-out_boxes, out_scores, out_classes = yolo.detect_image(image, True)
+image_canvas, out_boxes, out_scores, out_classes = yolo.detect_image(image)
 for i in range(len(out_boxes)):
     if yolo.class_names[out_classes[i]] in VEHICLES:
         region = Region(out_boxes[i])
         region_list.append(region)
 
 for idx in range(1, frame_cnt):
+    print("Processing frame %d" % idx * 25)
     prev_frame_path = os.path.join(test_path, 'ISLab-13-' + str((idx - 1) * 25) + '.jpg')  # previous frame
     curr_frame_path = os.path.join(test_path, 'ISLab-13-' + str(idx * 25) + '.jpg')  # current frame
-    # image = Image.open(os.path.join(test_path, prev_frame_path))
-    # out_boxes, out_scores, out_classes = yolo.detect_image(image, True)
     cvimage = np.asarray(image)  # image here is the previous image
 
     # template matching
@@ -108,7 +108,7 @@ for idx in range(1, frame_cnt):
             template = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
             img = cv2.imread(curr_frame_path, 0)
             w, h = template.shape[::-1]
-            res = cv2.matchTemplate(img, template, cv2.TM_CCOEFF_NORMED)
+            res = cv2.matchTemplate(img, template, cv2.TM_CCORR_NORMED)
             min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
             top_left = max_loc
 
@@ -120,6 +120,9 @@ for idx in range(1, frame_cnt):
             matched_box = np.array([top, left, bottom, right], dtype=np.float32)
             matched_region = Region(matched_box)
             iou = r.get_iou(matched_region)
+            print(r)
+            print(matched_region)
+            print(iou)
 
             if iou > MATCH_TEMPLATE_THRESHOLD:
                 if r.tracked:
@@ -132,18 +135,50 @@ for idx in range(1, frame_cnt):
                 if r.tracked:
                     r.occluded_time += 1
                     r.tracked = False
-                    r.occluded_time += 1
                 else:
                     if r.occluded_time > SEE_FRAMES_THRESHOLD:
                         r.occluded_time = -1  # delete the vehicle
                     else:
                         r.occluded_time += 1
 
-    # TODO: Look at region list and trigger alarm for those parked time longer than threshold
+    # Look at region list and trigger alarm for those parked time longer than threshold
+    for r in region_list:
+        if r.parked_time > ILLEGAL_PARKED_THRESHOLD and r.occluded_time != -1:
+            thickness = (image.size[0] + image.size[1]) // 300
+            font = ImageFont.truetype(font='font/FiraMono-Medium.otf',
+                                      size=np.floor(3e-2 * image.size[1] + 0.5).astype('int32'))
+            label = "%ds,%d" % (r.parked_time, r.tracked)
+            draw = ImageDraw.Draw(image_canvas)
+            label_size = draw.textsize(label, font)
+
+            box = r.get_box()
+            top, left, bottom, right = box
+            top = max(0, np.floor(top + 0.5).astype('int32'))
+            left = max(0, np.floor(left + 0.5).astype('int32'))
+            bottom = min(image.size[1], np.floor(bottom + 0.5).astype('int32'))
+            right = min(image.size[0], np.floor(right + 0.5).astype('int32'))
+            print(label, (left, top), (right, bottom))
+
+            if top - label_size[1] >= 0:
+                text_origin = np.array([left, top - label_size[1]])
+            else:
+                text_origin = np.array([left, top + 1])
+
+            # My kingdom for a good redistributable image drawing library.
+            for i in range(thickness):
+                draw.rectangle(
+                    [left + i, top + i, right - i, bottom - i],
+                    outline='black')
+            draw.rectangle(
+                [tuple(text_origin), tuple(text_origin + label_size)],
+                fill='white')
+            draw.text(text_origin, label, fill=(0, 0, 0), font=font)
+            del draw
+        image_canvas.save(os.path.join(test_path, 'out', str((idx-1) * 25) + '.jpg'), quality=90)
 
     # vehicle detection for current frame
     image = Image.open(curr_frame_path)
-    out_boxes, out_scores, out_classes = yolo.detect_image(image, True)
+    image_canvas, out_boxes, out_scores, out_classes = yolo.detect_image(image)
     for i in range(len(out_boxes)):
         if yolo.class_names[out_classes[i]] in VEHICLES:
             region = Region(out_boxes[i])
