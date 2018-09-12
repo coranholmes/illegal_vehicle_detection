@@ -29,10 +29,10 @@ class Region(object):
         return box
 
     def get_iou(self, boxB):
-        # determine the (x, y)-coordinates of the intersection rectangle
         boxA = self.get_box()
         boxB = boxB.get_box()
 
+        # determine the (x, y)-coordinates of the intersection rectangle
         xA = max(boxA[0], boxB[0])
         yA = max(boxA[1], boxB[1])
         xB = min(boxA[2], boxB[2])
@@ -42,13 +42,12 @@ class Region(object):
         interArea = max(0, xB - xA + 1) * max(0, yB - yA + 1)
 
         # compute the area of both the prediction and ground-truth
-        # rectangles
         boxAArea = (boxA[2] - boxA[0] + 1) * (boxA[3] - boxA[1] + 1)
         boxBArea = (boxB[2] - boxB[0] + 1) * (boxB[3] - boxB[1] + 1)
 
         # compute the intersection over union by taking the intersection
         # area and dividing it by the sum of prediction + ground-truth
-        # areas - the interesection area
+        # areas - the intersection area
         iou = interArea / float(boxAArea + boxBArea - interArea)
         return iou
 
@@ -70,10 +69,10 @@ class Region(object):
         self.top, self.left, self.bottom, self.right, self.parked_time, self.occluded_time, self.tracked)
 
 
-yolo = YOLO()
-MATHCH_TEMPLATE_THRESHOLD = 0.7
-SEE_FRAMES_THRESHOLD = 3
-MAP_REGION_THRESHOLD = 0.7
+MATCH_TEMPLATE_THRESHOLD = 0.8
+SEE_FRAMES_THRESHOLD = 5
+MAP_REGION_THRESHOLD = 0.8
+VEHICLES = ['car']  # TODO: Add other types of vehicles
 
 test_path = os.path.join(os.getcwd(), 'images', 'frames')
 frame_cnt = 0
@@ -84,11 +83,12 @@ region_list = []
 illegal_list = []
 
 # vehicle detection for frame 0
+yolo = YOLO()
 frame_path = os.path.join(test_path, 'ISLab-13-0.jpg')
 image = Image.open(os.path.join(test_path, frame_path))
 out_boxes, out_scores, out_classes = yolo.detect_image(image, True)
 for i in range(len(out_boxes)):
-    if yolo.class_names[out_classes[i]] == 'car':  # TODO: Add other types of vehicles
+    if yolo.class_names[out_classes[i]] in VEHICLES:
         region = Region(out_boxes[i])
         region_list.append(region)
 
@@ -121,7 +121,7 @@ for idx in range(1, frame_cnt):
             matched_region = Region(matched_box)
             iou = r.get_iou(matched_region)
 
-            if iou > MATHCH_TEMPLATE_THRESHOLD:
+            if iou > MATCH_TEMPLATE_THRESHOLD:
                 if r.tracked:
                     r.parked_time += 1
                 else:
@@ -139,13 +139,15 @@ for idx in range(1, frame_cnt):
                     else:
                         r.occluded_time += 1
 
+    # TODO: Look at region list and trigger alarm for those parked time longer than threshold
+
     # vehicle detection for current frame
     image = Image.open(curr_frame_path)
     out_boxes, out_scores, out_classes = yolo.detect_image(image, True)
     for i in range(len(out_boxes)):
-        if yolo.class_names[out_classes[i]] == 'car':  # TODO: Add other types of vehicles
+        if yolo.class_names[out_classes[i]] in VEHICLES:
             region = Region(out_boxes[i])
             # judge whether the detected region is already in two lists
             r_idx = region.find_region(region_list)
-            if r_idx == -1:  # TODO: I need to take a second thought here!!! (add 1s???)
+            if r_idx == -1:  # if cannot find the region in list than append it to the list
                 region_list.append(region)
