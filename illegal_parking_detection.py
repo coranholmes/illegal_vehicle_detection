@@ -55,10 +55,11 @@ class Region(object):
         max_iou = 0
         max_idx = 0
         for i in range(len(region_list)):
-            iou = self.get_iou(region_list[i])
-            if iou > max_iou:
-                max_iou = iou
-                max_idx = i
+            if region_list[i].occluded_time != -1:
+                iou = self.get_iou(region_list[i])
+                if iou > max_iou:
+                    max_iou = iou
+                    max_idx = i
         if max_iou > MAP_REGION_THRESHOLD:
             return max_idx
         else:
@@ -94,7 +95,7 @@ for i in range(len(out_boxes)):
         region_list.append(region)
 
 for idx in range(1, frame_cnt):
-    print("Processing frame %d" % idx * 25)
+    print("Processing frame %d" % (idx * 25))
     prev_frame_path = os.path.join(test_path, 'ISLab-13-' + str((idx - 1) * 25) + '.jpg')  # previous frame
     curr_frame_path = os.path.join(test_path, 'ISLab-13-' + str(idx * 25) + '.jpg')  # current frame
     cvimage = np.asarray(image)  # image here is the previous image
@@ -120,9 +121,6 @@ for idx in range(1, frame_cnt):
             matched_box = np.array([top, left, bottom, right], dtype=np.float32)
             matched_region = Region(matched_box)
             iou = r.get_iou(matched_region)
-            print(r)
-            print(matched_region)
-            print(iou)
 
             if iou > MATCH_TEMPLATE_THRESHOLD:
                 if r.tracked:
@@ -179,6 +177,8 @@ for idx in range(1, frame_cnt):
     # vehicle detection for current frame
     image = Image.open(curr_frame_path)
     image_canvas, out_boxes, out_scores, out_classes = yolo.detect_image(image)
+    flag = []
+    region_list_len = len(region_list)
     for i in range(len(out_boxes)):
         if yolo.class_names[out_classes[i]] in VEHICLES:
             region = Region(out_boxes[i])
@@ -186,3 +186,9 @@ for idx in range(1, frame_cnt):
             r_idx = region.find_region(region_list)
             if r_idx == -1:  # if cannot find the region in list than append it to the list
                 region_list.append(region)
+            else:
+                flag.append(r_idx)
+    # for those regions in the list who are not mapped to, r.traced = false, r.occluded_time = -1
+    for i in range(region_list_len):
+        if (region_list[i].occluded_time != -1) and (i not in flag):
+            region_list[i].occluded_time = -1
