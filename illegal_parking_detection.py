@@ -23,6 +23,7 @@ class Region(object):
         self.tracked = True
         self.parked_time = 0
         self.occluded_time = 0
+        self.deleted_time = 0
 
     def get_box(self):
         box = np.array([self.top, self.left, self.bottom, self.right], dtype=np.float32)
@@ -55,12 +56,15 @@ class Region(object):
         max_iou = 0
         max_idx = 0
         for i in range(len(region_list)):
-            if region_list[i].occluded_time != -1:
-                iou = self.get_iou(region_list[i])
-                if iou > max_iou:
-                    max_iou = iou
-                    max_idx = i
+            iou = self.get_iou(region_list[i])
+            if iou > max_iou:
+                max_iou = iou
+                max_idx = i
         if max_iou > MAP_REGION_THRESHOLD:
+            if region_list[max_idx].deleted_time > 1:
+                region_list[max_idx].parked_time += region_list[max_idx].occluded_time + region_list[max_idx].deleted_time
+                region_list[max_idx].occluded_time = 0
+                region_list[max_idx].deleted_time = 0  # TODO: NEED TEST HERE
             return max_idx
         else:
             return -1
@@ -102,7 +106,7 @@ for idx in range(1, frame_cnt):
 
     # template matching
     for r in region_list:
-        if r.occluded_time == -1:
+        if r.deleted_time > 0:
             continue
         else:
             template = cvimage[r.top:r.bottom, r.left:r.right]
@@ -135,13 +139,13 @@ for idx in range(1, frame_cnt):
                     r.tracked = False
                 else:
                     if r.occluded_time > SEE_FRAMES_THRESHOLD:
-                        r.occluded_time = -1  # delete the vehicle
+                        r.deleted_time += 1  # delete the vehicle
                     else:
                         r.occluded_time += 1
 
     # Look at region list and trigger alarm for those parked time longer than threshold
     for r in region_list:
-        if r.parked_time > ILLEGAL_PARKED_THRESHOLD and r.occluded_time != -1:
+        if r.parked_time > ILLEGAL_PARKED_THRESHOLD and r.deleted_time < 1:
             thickness = (image.size[0] + image.size[1]) // 300
             font = ImageFont.truetype(font='font/FiraMono-Medium.otf',
                                       size=np.floor(3e-2 * image.size[1] + 0.5).astype('int32'))
@@ -188,7 +192,10 @@ for idx in range(1, frame_cnt):
                 region_list.append(region)
             else:
                 flag.append(r_idx)
-    # for those regions in the list who are not mapped to, r.traced = false, r.occluded_time = -1
+    # for those regions in the list who are not mapped to, r.traced = false, r.deleted_time += 1
     for i in range(region_list_len):
-        if (region_list[i].occluded_time != -1) and (i not in flag):
-            region_list[i].occluded_time = -1
+        if (region_list[i].deleted_time < 1):
+            if (i not in flag):
+                region_list[i].deleted_time += 1
+        else:
+            region_list[i].deleted_time += 1
