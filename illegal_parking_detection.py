@@ -62,27 +62,30 @@ class Region(object):
                 max_idx = i
         if max_iou > MAP_REGION_THRESHOLD:
             if region_list[max_idx].deleted_time > 1:
-                region_list[max_idx].parked_time += region_list[max_idx].occluded_time + region_list[max_idx].deleted_time
+                region_list[max_idx].parked_time += region_list[max_idx].occluded_time + region_list[
+                    max_idx].deleted_time
                 region_list[max_idx].occluded_time = 0
-                region_list[max_idx].deleted_time = 0  # TODO: NEED TEST HERE
+                region_list[max_idx].deleted_time = 0
+                region_list[max_idx].tracked = True
             return max_idx
         else:
             return -1
 
     def __str__(self):
         return "Region:: top:%d left:%d bottom:%d right:%d, parked: %d occluded: %d tracked: %d" % (
-        self.top, self.left, self.bottom, self.right, self.parked_time, self.occluded_time, self.tracked)
+            self.top, self.left, self.bottom, self.right, self.parked_time, self.occluded_time, self.tracked)
 
 
 MATCH_TEMPLATE_THRESHOLD = 0.7
-SEE_FRAMES_THRESHOLD = 5
-MAP_REGION_THRESHOLD = 0.7
-ILLEGAL_PARKED_THRESHOLD = 5
-VEHICLES = ['car']  # TODO: Add other types of vehicles
+SEE_FRAMES_THRESHOLD = 5  # in case template match doesn't work well on some frames, this allows t frames of wrong template matching
+MAP_REGION_THRESHOLD = 0.7  # iou must be larger than this threshold to be recognized as the same ROI
+ILLEGAL_PARKED_THRESHOLD = 5  # if the vehicle parks more than t frames, it will be marked as illegal
+RESET_THRESHOLD = 20  # in case yolo doesn't work well on some frames, the algo keeps the memory of the detection history, but if the object is not detected within t frames, the region will be reset
+VEHICLES = ['car', 'bicycle', 'motorbike', 'bus', 'truck']
 
-test_path = os.path.join(os.getcwd(), 'images', 'frames')
+test_path = os.path.join(os.getcwd(), 'images')
 frame_cnt = 0
-for fn in os.listdir(test_path):
+for fn in os.listdir(os.path.join(test_path, 'frames')):
     frame_cnt += 1
 
 region_list = []
@@ -90,8 +93,8 @@ illegal_list = []
 
 # vehicle detection for frame 0
 yolo = YOLO()
-frame_path = os.path.join(test_path, 'ISLab-13-0.jpg')
-image = Image.open(os.path.join(test_path, frame_path))
+frame_path = os.path.join(test_path, 'frames', 'ISLab-13-0.jpg')
+image = Image.open(frame_path)
 image_canvas, out_boxes, out_scores, out_classes = yolo.detect_image(image)
 for i in range(len(out_boxes)):
     if yolo.class_names[out_classes[i]] in VEHICLES:
@@ -100,8 +103,8 @@ for i in range(len(out_boxes)):
 
 for idx in range(1, frame_cnt):
     print("Processing frame %d" % (idx * 25))
-    prev_frame_path = os.path.join(test_path, 'ISLab-13-' + str((idx - 1) * 25) + '.jpg')  # previous frame
-    curr_frame_path = os.path.join(test_path, 'ISLab-13-' + str(idx * 25) + '.jpg')  # current frame
+    prev_frame_path = os.path.join(test_path, 'frames', 'ISLab-13-' + str((idx - 1) * 25) + '.jpg')  # previous frame
+    curr_frame_path = os.path.join(test_path, 'frames', 'ISLab-13-' + str(idx * 25) + '.jpg')  # current frame
     cvimage = np.asarray(image)  # image here is the previous image
 
     # template matching
@@ -176,7 +179,7 @@ for idx in range(1, frame_cnt):
                 fill='white')
             draw.text(text_origin, label, fill=(0, 0, 0), font=font)
             del draw
-        image_canvas.save(os.path.join(test_path, 'out', str((idx-1) * 25) + '.jpg'), quality=90)
+        image_canvas.save(os.path.join(test_path, 'out', str((idx - 1) * 25) + '.jpg'), quality=90)
 
     # vehicle detection for current frame
     image = Image.open(curr_frame_path)
@@ -197,5 +200,12 @@ for idx in range(1, frame_cnt):
         if (region_list[i].deleted_time < 1):
             if (i not in flag):
                 region_list[i].deleted_time += 1
+                region_list[i].tracked = False
         else:
             region_list[i].deleted_time += 1
+            region_list[i].tracked = False
+            if region_list[i].deleted_time > RESET_THRESHOLD:
+                region_list[i].parked_time = 0
+                region_list[i].occluded_time = 0
+                region_list[i].deleted_time = 0
+                region_list[i].tracked = False
