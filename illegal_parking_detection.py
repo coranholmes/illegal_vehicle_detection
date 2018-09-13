@@ -14,7 +14,7 @@ from matplotlib import pyplot as plt
 
 
 class Region(object):
-    def __init__(self, box):
+    def __init__(self, box, type='unknown'):
         top, left, bottom, right = box
         self.top = max(0, np.floor(top + 0.5).astype('int32'))
         self.left = max(0, np.floor(left + 0.5).astype('int32'))
@@ -24,6 +24,7 @@ class Region(object):
         self.parked_time = 0
         self.occluded_time = 0
         self.deleted_time = 0
+        self.type = type
 
     def get_box(self):
         box = np.array([self.top, self.left, self.bottom, self.right], dtype=np.float32)
@@ -57,7 +58,7 @@ class Region(object):
         max_idx = 0
         for i in range(len(region_list)):
             iou = self.get_iou(region_list[i])
-            if iou > max_iou:
+            if (iou > max_iou) and (self.type == region_list[i].type):  # find the max iou of that type
                 max_iou = iou
                 max_idx = i
         if max_iou > MAP_REGION_THRESHOLD:
@@ -76,7 +77,7 @@ class Region(object):
             self.top, self.left, self.bottom, self.right, self.parked_time, self.occluded_time, self.tracked)
 
 
-MATCH_TEMPLATE_THRESHOLD = 0.7
+MATCH_TEMPLATE_THRESHOLD = 0.7  # iou must be larger than this threshold to match the template
 SEE_FRAMES_THRESHOLD = 5  # in case template match doesn't work well on some frames, this allows t frames of wrong template matching
 MAP_REGION_THRESHOLD = 0.7  # iou must be larger than this threshold to be recognized as the same ROI
 ILLEGAL_PARKED_THRESHOLD = 5  # if the vehicle parks more than t frames, it will be marked as illegal
@@ -97,8 +98,9 @@ frame_path = os.path.join(test_path, 'frames', 'ISLab-13-0.jpg')
 image = Image.open(frame_path)
 image_canvas, out_boxes, out_scores, out_classes = yolo.detect_image(image)
 for i in range(len(out_boxes)):
-    if yolo.class_names[out_classes[i]] in VEHICLES:
-        region = Region(out_boxes[i])
+    class_name = yolo.class_names[out_classes[i]]
+    if class_name in VEHICLES:
+        region = Region(out_boxes[i], class_name)
         region_list.append(region)
 
 for idx in range(1, frame_cnt):
@@ -187,8 +189,9 @@ for idx in range(1, frame_cnt):
     flag = []
     region_list_len = len(region_list)
     for i in range(len(out_boxes)):
-        if yolo.class_names[out_classes[i]] in VEHICLES:
-            region = Region(out_boxes[i])
+        class_name = yolo.class_names[out_classes[i]]
+        if class_name in VEHICLES:
+            region = Region(out_boxes[i], class_name)
             # judge whether the detected region is already in two lists
             r_idx = region.find_region(region_list)
             if r_idx == -1:  # if cannot find the region in list than append it to the list
