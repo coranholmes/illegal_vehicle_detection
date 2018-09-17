@@ -143,7 +143,7 @@ class YOLO(object):
             top = max(0, np.floor(top + 0.5).astype('int32'))
             left = max(0, np.floor(left + 0.5).astype('int32'))
             bottom = min(image.size[1], np.floor(bottom + 0.5).astype('int32'))
-            right = min(image.size[0], np.floor(right + 0.5).astype('int32'))
+            right = min(image.size[0], np.floor(right + 0.5).astype('int32'))  # To avoid to draw outside the image
             # print(label, (left, top), (right, bottom))
 
             if top - label_size[1] >= 0:
