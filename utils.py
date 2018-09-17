@@ -14,6 +14,7 @@ MAP_REGION_THRESHOLD = 0.7  # iou must be larger than this threshold to be recog
 ILLEGAL_PARKED_THRESHOLD = 5  # if the vehicle parks more than t frames, it will be marked as illegal
 RESET_THRESHOLD = 20  # in case yolo doesn't work well on some frames, the algo keeps the memory of the detection history, but if the object is not detected within t frames, the region will be reset
 VEHICLES = ['car', 'bicycle', 'motorbike', 'bus', 'truck']
+SAVE_IMAGE_RES = False  # whether to save image results
 
 class Region(object):
     def __init__(self, box, type='unknown'):

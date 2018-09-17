@@ -19,13 +19,13 @@ output_path = os.path.join(os.getcwd(), 'videos', 'output', 'ISLab-13.mp4')
 vid = cv2.VideoCapture(video_path)
 if not vid.isOpened():
     raise IOError("Couldn't open webcam or video")
-video_FourCC = int(vid.get(cv2.CAP_PROP_FOURCC))
+# video_FourCC = int(vid.get(cv2.CAP_PROP_FOURCC))
 video_FourCC = cv2.VideoWriter_fourcc(*'XVID')
 video_fps = vid.get(cv2.CAP_PROP_FPS)
 video_size = (int(vid.get(cv2.CAP_PROP_FRAME_WIDTH)),
               int(vid.get(cv2.CAP_PROP_FRAME_HEIGHT)))
 
-print("!!! TYPE:", type(output_path), type(video_FourCC), type(video_fps), type(video_size))
+
 out = cv2.VideoWriter(output_path, video_FourCC, video_fps, video_size)
 accum_time = 0
 curr_fps = 0
@@ -38,8 +38,10 @@ illegal_list = []
 
 # vehicle detection for frame 0
 return_value, cur_img_cv = vid.read()
+cur_img_cv = cv2.cvtColor(cur_img_cv, cv2.COLOR_BGR2RGB)
 image = Image.fromarray(cur_img_cv)  # transfer OpenCV format to PIL.Image format
 image_canvas, out_boxes, out_scores, out_classes = yolo.detect_image(image)
+# image_canvas.save(os.path.join(os.getcwd(),'images', 'out2', '0.jpg'), quality=90)
 
 for i in range(len(out_boxes)):
     class_name = yolo.class_names[out_classes[i]]
@@ -48,17 +50,18 @@ for i in range(len(out_boxes)):
         region_list.append(region)
 
 idx = 1
+result = None
 
 while True:
-    print("Current time: %d" % idx)
     pre_img_cv = np.asarray(image)  # transfer PIL.Image format to OpenCV format
-
     return_value, cur_img_cv = vid.read()
+
     if not return_value:
         break
 
     # template matching
     if idx % DETECT_EVERY_N_FRAMES == 0:
+        print("Current time: %d" % idx)
         for r in region_list:
             if r.deleted_time > 0:
                 continue
@@ -130,9 +133,10 @@ while True:
                     fill='white')
                 draw.text(text_origin, label, fill=(0, 0, 0), font=font)
                 del draw
-        # image_canvas.save(os.path.join(test_path, 'out', str((idx - 1) * 25) + '.jpg'), quality=90)
+        if SAVE_IMAGE_RES:
+            image_canvas.save(os.path.join(os.getcwd(),'images', 'out2', str(idx) + '.jpg'), quality=90)
 
-        result = np.asarray(image_canvas)
+        result = cv2.cvtColor(np.asarray(image_canvas), cv2.COLOR_RGB2BGR)
         curr_time = timer()
         exec_time = curr_time - prev_time
         prev_time = curr_time
@@ -147,12 +151,9 @@ while True:
         cv2.namedWindow("result", cv2.WINDOW_NORMAL)
         cv2.imshow("result", result)
 
-        out.write(result)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
-
     # if idx % DETECT_EVERY_N_FRAMES == 0:
         # vehicle detection for current frame
+        cur_img_cv = cv2.cvtColor(cur_img_cv, cv2.COLOR_BGR2RGB)
         image = Image.fromarray(cur_img_cv)  # transfer OpenCV format to PIL.Image format
         image_canvas, out_boxes, out_scores, out_classes = yolo.detect_image(image)
         flag = []
@@ -182,5 +183,12 @@ while True:
                     region_list[i].deleted_time = 0
                     region_list[i].tracked = False
 
+    if result is None:
+        out.write(cv2.cvtColor(np.asarray(image_canvas), cv2.COLOR_RGB2BGR))
+    else:
+        out.write(result)
+
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
     idx += 1
 yolo.close_session()
