@@ -7,30 +7,30 @@
 
 import cv2
 import os
+import json
 
 from timeit import default_timer as timer
 from PIL import Image, ImageFont, ImageDraw
-from yolo import YOLO, detect_video
+from yolo import YOLO
 from utils import *
 
-video_path = os.path.join(os.getcwd(), 'videos', 'ISLab', 'ISLab-13.mp4')
-output_path = os.path.join(os.getcwd(), 'videos', 'output', 'ISLab-13.mp4')
+video_id = 13
+video_path = os.path.join(os.getcwd(), 'videos', 'ISLab', 'ISLab-' + str(video_id) + '.mp4')
+video_output_path = os.path.join(os.getcwd(), 'videos', 'out', 'ISLab-' + str(video_id) + '.mp4')
+capture_output_path = os.path.join(os.getcwd(), 'videos', 'images', str(video_id))
+text_output_path = os.path.join(os.getcwd(), 'videos', 'label', str(video_id) + '.txt')
+file = open(text_output_path, 'w')
 
 vid = cv2.VideoCapture(video_path)
 if not vid.isOpened():
     raise IOError("Couldn't open webcam or video")
-# video_FourCC = int(vid.get(cv2.CAP_PROP_FOURCC))
+
 video_FourCC = cv2.VideoWriter_fourcc(*'XVID')
 video_fps = vid.get(cv2.CAP_PROP_FPS)
 video_size = (int(vid.get(cv2.CAP_PROP_FRAME_WIDTH)),
               int(vid.get(cv2.CAP_PROP_FRAME_HEIGHT)))
-
-
-out = cv2.VideoWriter(output_path, video_FourCC, video_fps, video_size)
-accum_time = 0
-curr_fps = 0
-fps = "FPS: ??"
-prev_time = timer()
+DETECT_EVERY_N_FRAMES = round(video_fps)  # detect every second
+out = cv2.VideoWriter(video_output_path, video_FourCC, video_fps, video_size)
 
 yolo = YOLO()
 region_list = []
@@ -41,7 +41,6 @@ return_value, cur_img_cv = vid.read()
 cur_img_cv = cv2.cvtColor(cur_img_cv, cv2.COLOR_BGR2RGB)
 image = Image.fromarray(cur_img_cv)  # transfer OpenCV format to PIL.Image format
 image_canvas, out_boxes, out_scores, out_classes = yolo.detect_image(image)
-# image_canvas.save(os.path.join(os.getcwd(),'images', 'out2', '0.jpg'), quality=90)
 
 for i in range(len(out_boxes)):
     class_name = yolo.class_names[out_classes[i]]
@@ -49,11 +48,11 @@ for i in range(len(out_boxes)):
         region = Region(out_boxes[i], class_name)
         region_list.append(region)
 
-idx = 1
+idx = 1  # frame no.
 result = None
 
 while True:
-    pre_img_cv = np.asarray(image)  # transfer PIL.Image format to OpenCV format
+    pre_img_cv = cv2.cvtColor(np.asarray(image), cv2.COLOR_RGB2BGR)  # transfer PIL.Image format to OpenCV format
     return_value, cur_img_cv = vid.read()
 
     if not return_value:
@@ -61,7 +60,7 @@ while True:
 
     # template matching
     if idx % DETECT_EVERY_N_FRAMES == 0:
-        print("Current time: %d" % idx)
+        print("Current frame: %d" % idx)
         for r in region_list:
             if r.deleted_time > 0:
                 continue
@@ -116,14 +115,28 @@ while True:
                 left = max(0, np.floor(left + 0.5).astype('int32'))
                 bottom = min(image.size[1], np.floor(bottom + 0.5).astype('int32'))
                 right = min(image.size[0], np.floor(right + 0.5).astype('int32'))
-                print(label, (left, top), (right, bottom))
+
+                # write the time and location info to json file
+                json_dict = {
+                    'frame': idx,
+                    'type': r.type,
+                    'tracked': r.tracked,
+                    'top': int(r.top),
+                    'left': int(r.left),
+                    'bottom': int(r.bottom),
+                    'right': int(r.right),
+                    'parked_time': int(r.parked_time),
+                    'occluded_time': int(r.occluded_time),
+                }
+                json_text = json.dumps(json_dict)
+                file.write(json_text + "\n")
+                print(json_text)
 
                 if top - label_size[1] >= 0:
                     text_origin = np.array([left, top - label_size[1]])
                 else:
                     text_origin = np.array([left, top + 1])
 
-                # My kingdom for a good redistributable image drawing library.
                 for i in range(thickness):
                     draw.rectangle(
                         [left + i, top + i, right - i, bottom - i],
@@ -134,24 +147,18 @@ while True:
                 draw.text(text_origin, label, fill=(0, 0, 0), font=font)
                 del draw
         if SAVE_IMAGE_RES:
-            image_canvas.save(os.path.join(os.getcwd(),'images', 'out2', str(idx) + '.jpg'), quality=90)
+            if not os.path.exists(capture_output_path):
+                print('Creating output path {}'.format(capture_output_path))
+                os.mkdir(capture_output_path)
+            image_canvas.save(os.path.join(capture_output_path, str(idx) + '.jpg'), quality=90)
 
         result = cv2.cvtColor(np.asarray(image_canvas), cv2.COLOR_RGB2BGR)
-        curr_time = timer()
-        exec_time = curr_time - prev_time
-        prev_time = curr_time
-        accum_time = accum_time + exec_time
-        curr_fps = curr_fps + 1
-        if accum_time > 1:
-            accum_time = accum_time - 1
-            fps = "FPS: " + str(curr_fps)
-            curr_fps = 0
-        cv2.putText(result, text=fps, org=(3, 15), fontFace=cv2.FONT_HERSHEY_SIMPLEX,
+        video_text = "Frame " + str(idx)
+        cv2.putText(result, text=video_text, org=(3, 15), fontFace=cv2.FONT_HERSHEY_SIMPLEX,
                     fontScale=0.50, color=(255, 0, 0), thickness=2)
         cv2.namedWindow("result", cv2.WINDOW_NORMAL)
         cv2.imshow("result", result)
 
-    # if idx % DETECT_EVERY_N_FRAMES == 0:
         # vehicle detection for current frame
         cur_img_cv = cv2.cvtColor(cur_img_cv, cv2.COLOR_BGR2RGB)
         image = Image.fromarray(cur_img_cv)  # transfer OpenCV format to PIL.Image format
@@ -168,6 +175,7 @@ while True:
                     region_list.append(region)
                 else:
                     flag.append(r_idx)
+
         # for those regions in the list who are not mapped to, r.traced = false, r.deleted_time += 1
         for i in range(region_list_len):
             if (region_list[i].deleted_time < 1):

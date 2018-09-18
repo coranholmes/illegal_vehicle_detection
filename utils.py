@@ -7,14 +7,14 @@
 
 import numpy as np
 
-DETECT_EVERY_N_FRAMES = 25
 MATCH_TEMPLATE_THRESHOLD = 0.7  # iou must be larger than this threshold to match the template
 SEE_FRAMES_THRESHOLD = 5  # in case template match doesn't work well on some frames, this allows t frames of wrong template matching
 MAP_REGION_THRESHOLD = 0.7  # iou must be larger than this threshold to be recognized as the same ROI
 ILLEGAL_PARKED_THRESHOLD = 5  # if the vehicle parks more than t frames, it will be marked as illegal
 RESET_THRESHOLD = 20  # in case yolo doesn't work well on some frames, the algo keeps the memory of the detection history, but if the object is not detected within t frames, the region will be reset
 VEHICLES = ['car', 'bicycle', 'motorbike', 'bus', 'truck']
-SAVE_IMAGE_RES = False  # whether to save image results
+SAVE_IMAGE_RES = True  # whether to save image results
+
 
 class Region(object):
     def __init__(self, box, type='unknown'):
