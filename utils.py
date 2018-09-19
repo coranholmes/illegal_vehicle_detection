@@ -77,5 +77,7 @@ class Region(object):
             return -1
 
     def __str__(self):
-        return "Region:: top:%d left:%d bottom:%d right:%d, parked: %d occluded: %d tracked: %d" % (
-            self.top, self.left, self.bottom, self.right, self.parked_time, self.occluded_time, self.tracked)
+        return "Region:: type:%s tracked: %d top:%d left:%d bottom:%d right:%d, parked: %d occluded: %d deleted: %d " % (
+            self.type, self.tracked, self.top, self.left, self.bottom, self.right, self.parked_time, self.occluded_time,
+            self.deleted_time,
+        )
