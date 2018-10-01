@@ -192,7 +192,7 @@ def detect_video(yolo, video_path, output_path=""):
         if not return_value:
             break
         image = Image.fromarray(frame)  # transfer OpenCV format to PIL.Image format
-        image = yolo.detect_image(image)
+        image, obox, oscore, oclass = yolo.detect_image(image)
         result = np.asarray(image)  # transfer PIL.Image format to OpenCV format
         curr_time = timer()
         exec_time = curr_time - prev_time
