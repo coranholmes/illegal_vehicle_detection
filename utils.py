@@ -6,14 +6,18 @@
 
 
 import numpy as np
+import os
 
+DS_NAME = 'xd_ds'  # current support 'ISLab' and 'xd_ds'
+SUFFIX_LENGTH = 4
 MATCH_TEMPLATE_THRESHOLD = 0.7  # iou must be larger than this threshold to match the template
 SEE_FRAMES_THRESHOLD = 5  # in case template match doesn't work well on some frames, this allows t frames of wrong template matching
 MAP_REGION_THRESHOLD = 0.7  # iou must be larger than this threshold to be recognized as the same ROI
 ILLEGAL_PARKED_THRESHOLD = 5  # if the vehicle parks more than t frames, it will be marked as illegal
-RESET_THRESHOLD = 20  # in case yolo doesn't work well on some frames, the algo keeps the memory of the detection history, but if the object is not detected within t frames, the region will be reset
+RESET_THRESHOLD = 5  # in case yolo doesn't work well on some frames, the algo keeps the memory of the detection history, but if the object is not detected within t frames, the region will be reset
 VEHICLES = ['car', 'bicycle', 'motorbike', 'bus', 'truck']
 SAVE_IMAGE_RES = True  # whether to save image results
+DRAW_ON_DETECTION_RESULTS = False  # whether to draw the detection results based on yolo detection
 
 
 class Region(object):
@@ -81,3 +85,17 @@ class Region(object):
             self.type, self.tracked, self.top, self.left, self.bottom, self.right, self.parked_time, self.occluded_time,
             self.deleted_time,
         )
+
+def make_dir(path):
+    if not os.path.exists(path):
+        print('Creating path {}'.format(path))
+        os.mkdir(path)
+
+def make_video_subdir(ds_root):
+    capture_output_path = os.path.join(ds_root, 'capture')
+    make_dir(capture_output_path)
+    text_output_path = os.path.join(ds_root, 'label')
+    make_dir(text_output_path)
+    video_output_path = os.path.join(ds_root, 'output')
+    make_dir(video_output_path)
+    return capture_output_path, text_output_path, video_output_path

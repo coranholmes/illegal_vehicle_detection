@@ -13,16 +13,18 @@ from yolo import YOLO
 from utils import *
 
 
-for video_id in range(1,4):
-    # video_id = 13
-    if video_id < 10:
-        video_id = '0' + str(video_id)
-    print("Processing video %s" % str(video_id))
-    video_path = os.path.join(os.getcwd(), 'videos', 'ISLab', 'ISLab-' + str(video_id) + '.mp4')
-    video_output_path = os.path.join(os.getcwd(), 'videos', 'out', 'ISLab-' + str(video_id) + '.mp4')
-    capture_output_path = os.path.join(os.getcwd(), 'videos', 'images', str(video_id))
-    text_output_path = os.path.join(os.getcwd(), 'videos', 'label', str(video_id) + '.txt')
-    file = open(text_output_path, 'w')
+ds_root = os.path.join(os.getcwd(), 'videos', DS_NAME)
+input_dir = os.path.join(ds_root, 'input')
+for vid in os.listdir(input_dir):
+
+    print("Processing video %s" % vid)
+    video_path = os.path.join(input_dir, vid)
+
+    capture_dir, label_dir, output_dir  = make_video_subdir(ds_root)
+    capture_output_path = os.path.join(capture_dir, vid[:-SUFFIX_LENGTH])
+    label_output_path = os.path.join(label_dir, vid[:-SUFFIX_LENGTH] + '.txt')
+    video_output_path = os.path.join(output_dir, vid)
+    file = open(label_output_path, 'w')
 
     vid = cv2.VideoCapture(video_path)
     if not vid.isOpened():
@@ -55,6 +57,9 @@ for video_id in range(1,4):
     result = None
 
     while True:
+        if DRAW_ON_DETECTION_RESULTS == False:
+            image_canvas = image
+
         pre_img_cv = cv2.cvtColor(np.asarray(image), cv2.COLOR_RGB2BGR)  # transfer PIL.Image format to OpenCV format
         return_value, cur_img_cv = vid.read()
 
@@ -110,6 +115,7 @@ for video_id in range(1,4):
                                               size=np.floor(3e-2 * image.size[1] + 0.5).astype('int32'))
                     label = "%ds,%d" % (r.parked_time, r.tracked)
                     draw = ImageDraw.Draw(image_canvas)
+
                     label_size = draw.textsize(label, font)
 
                     box = r.get_box()
@@ -149,13 +155,13 @@ for video_id in range(1,4):
                         fill='white')
                     draw.text(text_origin, label, fill=(0, 0, 0), font=font)
                     del draw
-            if SAVE_IMAGE_RES:
-                if not os.path.exists(capture_output_path):
-                    print('Creating output path {}'.format(capture_output_path))
-                    os.mkdir(capture_output_path)
-                image_canvas.save(os.path.join(capture_output_path, str(idx) + '.jpg'), quality=90)
-
             result = cv2.cvtColor(np.asarray(image_canvas), cv2.COLOR_RGB2BGR)
+
+            if SAVE_IMAGE_RES:
+                make_dir(capture_output_path)
+                # image_canvas.save(os.path.join(capture_output_path, str(idx) + '.jpg'), quality=90)
+                cv2.imwrite(os.path.join(capture_output_path, str(idx) + '.jpg'), result)
+
             video_text = "Frame " + str(idx)
             cv2.putText(result, text=video_text, org=(3, 15), fontFace=cv2.FONT_HERSHEY_SIMPLEX,
                         fontScale=0.50, color=(255, 0, 0), thickness=2)
@@ -194,7 +200,7 @@ for video_id in range(1,4):
             region_list = list(filter(lambda r: r.deleted_time != -1, region_list))
 
         if result is None:
-            out.write(cv2.cvtColor(np.asarray(image_canvas), cv2.COLOR_RGB2BGR))
+            out.write(cv2.cvtColor(np.asarray(image), cv2.COLOR_RGB2BGR))  # TODO IMAGE CANVAS ISSUE HANDLED
         else:
             out.write(result)
 

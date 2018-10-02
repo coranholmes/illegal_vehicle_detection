@@ -100,16 +100,18 @@ class YOLO(object):
         return boxes, scores, classes
 
     def detect_image(self, image):
+        image_copy  = image.copy()
+
         start = timer()
 
         if self.model_image_size != (None, None):
             assert self.model_image_size[0]%32 == 0, 'Multiples of 32 required'
             assert self.model_image_size[1]%32 == 0, 'Multiples of 32 required'
-            boxed_image = letterbox_image(image, tuple(reversed(self.model_image_size)))
+            boxed_image = letterbox_image(image_copy, tuple(reversed(self.model_image_size)))
         else:
-            new_image_size = (image.width - (image.width % 32),
-                              image.height - (image.height % 32))
-            boxed_image = letterbox_image(image, new_image_size)
+            new_image_size = (image_copy.width - (image_copy.width % 32),
+                              image_copy.height - (image_copy.height % 32))
+            boxed_image = letterbox_image(image_copy, new_image_size)
         image_data = np.array(boxed_image, dtype='float32')
 
         print(image_data.shape)
@@ -120,15 +122,15 @@ class YOLO(object):
             [self.boxes, self.scores, self.classes],
             feed_dict={
                 self.yolo_model.input: image_data,
-                self.input_image_shape: [image.size[1], image.size[0]],
+                self.input_image_shape: [image_copy.size[1], image_copy.size[0]],
                 K.learning_phase(): 0
             })
 
         print('Found {} boxes for {}'.format(len(out_boxes), 'img'))
 
         font = ImageFont.truetype(font='font/FiraMono-Medium.otf',
-                    size=np.floor(3e-2 * image.size[1] + 0.5).astype('int32'))
-        thickness = (image.size[0] + image.size[1]) // 300
+                                  size=np.floor(3e-2 * image_copy.size[1] + 0.5).astype('int32'))
+        thickness = (image_copy.size[0] + image_copy.size[1]) // 300
 
         for i, c in reversed(list(enumerate(out_classes))):
             predicted_class = self.class_names[c]
@@ -136,14 +138,14 @@ class YOLO(object):
             score = out_scores[i]
 
             label = '{} {:.2f}'.format(predicted_class, score)
-            draw = ImageDraw.Draw(image)
+            draw = ImageDraw.Draw(image_copy)
             label_size = draw.textsize(label, font)
 
             top, left, bottom, right = box
             top = max(0, np.floor(top + 0.5).astype('int32'))
             left = max(0, np.floor(left + 0.5).astype('int32'))
-            bottom = min(image.size[1], np.floor(bottom + 0.5).astype('int32'))
-            right = min(image.size[0], np.floor(right + 0.5).astype('int32'))  # To avoid to draw outside the image
+            bottom = min(image_copy.size[1], np.floor(bottom + 0.5).astype('int32'))
+            right = min(image_copy.size[0], np.floor(right + 0.5).astype('int32'))  # To avoid to draw outside the image
             # print(label, (left, top), (right, bottom))
 
             if top - label_size[1] >= 0:
@@ -164,7 +166,7 @@ class YOLO(object):
 
         end = timer()
         print(end - start)
-        return image, out_boxes, out_scores, out_classes
+        return image_copy, out_boxes, out_scores, out_classes
 
     def close_session(self):
         self.sess.close()
