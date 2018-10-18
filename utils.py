@@ -8,16 +8,17 @@
 import numpy as np
 import os
 
-DS_NAME = 'xd_ds'  # current support 'ISLab' and 'xd_ds'
-SUFFIX_LENGTH = 4
-MATCH_TEMPLATE_THRESHOLD = 0.7  # iou must be larger than this threshold to match the template
-SEE_FRAMES_THRESHOLD = 5  # in case template match doesn't work well on some frames, this allows t frames of wrong template matching
-MAP_REGION_THRESHOLD = 0.7  # iou must be larger than this threshold to be recognized as the same ROI
+DS_NAME = 'xd_full'  # current support 'ISLab' and 'xd_ds'
+SUFFIX_LENGTH = 4  # the length of suffix (.mp4: length = 4)
+MATCH_TEMPLATE_THRESHOLD = 0.85  # iou must be larger than this threshold to match the template (default = 0.7)
+SEE_FRAMES_THRESHOLD = 1  # in case template match doesn't work well on some frames, this allows t frames of wrong template matching (default = 5)
+MAP_REGION_THRESHOLD = 0.85  # iou must be larger than this threshold to be recognized as the same ROI (default = 0.7)
 ILLEGAL_PARKED_THRESHOLD = 5  # if the vehicle parks more than t frames, it will be marked as illegal
-RESET_THRESHOLD = 5  # in case yolo doesn't work well on some frames, the algo keeps the memory of the detection history, but if the object is not detected within t frames, the region will be reset
+RESET_THRESHOLD = 1  # in case yolo doesn't work well on some frames, the algo keeps the memory of the detection history, but if the object is not detected within t frames, the region will be reset (default = 20)
 VEHICLES = ['car', 'bicycle', 'motorbike', 'bus', 'truck']
 SAVE_IMAGE_RES = True  # whether to save image results
-DRAW_ON_DETECTION_RESULTS = False  # whether to draw the detection results based on yolo detection
+DRAW_ON_DETECTION_RESULTS = True  # whether to draw the detection results based on yolo detection
+MATCH_TEMPLATE_ON_GREY = True  # whether to convert to grey scale when doing template matching
 
 
 class Region(object):

@@ -74,10 +74,15 @@ for vid in os.listdir(input_dir):
                     continue
                 else:
                     template = pre_img_cv[r.top:r.bottom, r.left:r.right]
-                    template = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)  # convert to grey scale
+                    if MATCH_TEMPLATE_ON_GREY:
+                        template = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)  # convert to grey scale
+                        w, h = template.shape[::-1]
+                        res = cv2.matchTemplate(cv2.cvtColor(cur_img_cv, cv2.COLOR_BGR2GRAY), template,
+                                                cv2.TM_CCORR_NORMED)
+                    else:
+                        w, h, colormd = template.shape[::-1]
+                        res = cv2.matchTemplate(cur_img_cv, template, cv2.TM_CCORR_NORMED)
 
-                    w, h = template.shape[::-1]
-                    res = cv2.matchTemplate(cv2.cvtColor(cur_img_cv, cv2.COLOR_BGR2GRAY), template, cv2.TM_CCORR_NORMED)
                     min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
                     top_left = max_loc
 
