@@ -35,7 +35,7 @@ for vid in os.listdir(input_dir):
     video_size = (int(vid.get(cv2.CAP_PROP_FRAME_WIDTH)),
                   int(vid.get(cv2.CAP_PROP_FRAME_HEIGHT)))
     DETECT_EVERY_N_FRAMES = round(video_fps)  # detect every second
-    out = cv2.VideoWriter(video_output_path, video_FourCC, video_fps, video_size)
+    # out = cv2.VideoWriter(video_output_path, video_FourCC, video_fps, video_size)
 
     yolo = YOLO()
     region_list = []
@@ -133,6 +133,7 @@ for vid in os.listdir(input_dir):
                     # write the time and location info to json file
                     json_dict = {
                         'frame': idx,
+                        'id': "-1",
                         'type': r.type,
                         'tracked': r.tracked,
                         'top': int(r.top),
@@ -141,6 +142,7 @@ for vid in os.listdir(input_dir):
                         'right': int(r.right),
                         'parked_time': int(r.parked_time),
                         'occluded_time': int(r.occluded_time),
+                        'detected': 'YES' if r.parked_time >= ILLEGAL_PARKED_THRESHOLD and r.tracked else 'NO'  # TODO tracked意思是啥？
                     }
                     json_text = json.dumps(json_dict)
                     file.write(json_text + "\n")
@@ -168,10 +170,10 @@ for vid in os.listdir(input_dir):
                 cv2.imwrite(os.path.join(capture_output_path, str(idx) + '.jpg'), result)
 
             video_text = "Frame " + str(idx)
-            cv2.putText(result, text=video_text, org=(3, 15), fontFace=cv2.FONT_HERSHEY_SIMPLEX,
-                        fontScale=0.50, color=(255, 0, 0), thickness=2)
-            cv2.namedWindow("result", cv2.WINDOW_NORMAL)
-            cv2.imshow("result", result)
+            # cv2.putText(result, text=video_text, org=(3, 15), fontFace=cv2.FONT_HERSHEY_SIMPLEX,
+            #             fontScale=0.50, color=(255, 0, 0), thickness=2)
+            # cv2.namedWindow("result", cv2.WINDOW_NORMAL)
+            # cv2.imshow("result", result)
 
             # vehicle detection for current frame
             cur_img_cv = cv2.cvtColor(cur_img_cv, cv2.COLOR_BGR2RGB)
@@ -190,7 +192,7 @@ for vid in os.listdir(input_dir):
                     else:
                         flag.append(r_idx)
 
-            # for those regions in the list who are not mapped to, r.traced = false, r.deleted_time += 1
+            # for those regions in the list who are not mapped to, r.tracked = false, r.deleted_time += 1
             for i in range(region_list_len):
                 if (region_list[i].deleted_time < 1):
                     if (i not in flag):
@@ -204,12 +206,12 @@ for vid in os.listdir(input_dir):
             # delete those deleted_time is set to -1
             region_list = list(filter(lambda r: r.deleted_time != -1, region_list))
 
-        if result is None:
-            out.write(cv2.cvtColor(np.asarray(image), cv2.COLOR_RGB2BGR))  # TODO IMAGE CANVAS ISSUE HANDLED
-        else:
-            out.write(result)
+        # if result is None:
+        #     out.write(cv2.cvtColor(np.asarray(image), cv2.COLOR_RGB2BGR))  # TODO IMAGE CANVAS ISSUE HANDLED
+        # else:
+        #     out.write(result)
 
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
+        # if cv2.waitKey(1) & 0xFF == ord('q'):
+        #     break
         idx += 1
     # yolo.close_session()

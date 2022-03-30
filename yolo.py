@@ -16,7 +16,7 @@ from PIL import Image, ImageFont, ImageDraw
 from yolo3.model import yolo_eval, yolo_body, tiny_yolo_body
 from yolo3.utils import letterbox_image
 import os
-# from keras.utils import multi_gpu_model
+from keras.utils import multi_gpu_model
 
 class YOLO(object):
     _defaults = {
@@ -114,7 +114,7 @@ class YOLO(object):
             boxed_image = letterbox_image(image_copy, new_image_size)
         image_data = np.array(boxed_image, dtype='float32')
 
-        print(image_data.shape)
+        # print(image_data.shape)
         image_data /= 255.
         image_data = np.expand_dims(image_data, 0)  # Add batch dimension.
 
@@ -126,7 +126,7 @@ class YOLO(object):
                 K.learning_phase(): 0
             })
 
-        print('Found {} boxes for {}'.format(len(out_boxes), 'img'))
+        # print('Found {} boxes for {}'.format(len(out_boxes), 'img'))
 
         font = ImageFont.truetype(font='font/FiraMono-Medium.otf',
                                   size=np.floor(3e-2 * image_copy.size[1] + 0.5).astype('int32'))
@@ -165,7 +165,7 @@ class YOLO(object):
             del draw
 
         end = timer()
-        print(end - start)
+        # print(end - start)
         return image_copy, out_boxes, out_scores, out_classes
 
     def close_session(self):

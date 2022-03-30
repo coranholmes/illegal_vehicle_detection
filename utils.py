@@ -8,7 +8,7 @@
 import numpy as np
 import os
 
-DS_NAME = 'xd_full'  # current support 'ISLab' and 'xd_ds'
+DS_NAME = 'ISLab'  # current support 'ISLab' and 'xd_ds'
 SUFFIX_LENGTH = 4  # the length of suffix (.mp4: length = 4)
 MATCH_TEMPLATE_THRESHOLD = 0.85  # iou must be larger than this threshold to match the template (default = 0.7)
 SEE_FRAMES_THRESHOLD = 1  # in case template match doesn't work well on some frames, this allows t frames of wrong template matching (default = 5)
@@ -19,6 +19,8 @@ VEHICLES = ['car', 'bicycle', 'motorbike', 'bus', 'truck']
 SAVE_IMAGE_RES = True  # whether to save image results
 DRAW_ON_DETECTION_RESULTS = True  # whether to draw the detection results based on yolo detection
 MATCH_TEMPLATE_ON_GREY = True  # whether to convert to grey scale when doing template matching
+
+EVALUATION_IOU_THRESHOLD = 0.6
 
 
 class Region(object):
