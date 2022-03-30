@@ -5,20 +5,44 @@
 # @Software: PyCharm
 
 
-import cv2
-import os
-import json
+import cv2,os,json,time,argparse
 from PIL import Image, ImageFont, ImageDraw
+from multiprocessing import Process
 from yolo import YOLO
 from utils import *
 
 
-ds_root = os.path.join(os.getcwd(), 'videos', DS_NAME)
-input_dir = os.path.join(ds_root, 'input')
-for vid in os.listdir(input_dir):
+def multi_worker(args):
+    vid_path, ds_name, show_masked = args.path, args.name, args.mask
+    if os.path.isfile(vid_path):  # process single video
+        process_video(vid_path, show_masked)
+    else:
+        print("*************** Processing batch videos! ***************")
+        n_proc = 6
+        ds_root = os.path.join(os.getcwd(), 'videos', ds_name)
+        input_dir = os.path.join(ds_root, 'input')
+        video_list = [os.path.join(input_dir, vid_name) for vid_name in os.listdir(input_dir)]
 
-    print("Processing video %s" % vid)
-    video_path = os.path.join(input_dir, vid)
+        chunks = [video_list[i::n_proc] for i in range(n_proc)]
+        procs = []
+        for chunk in chunks:
+            if len(chunk) > 0:
+                proc = Process(target=multi_process_video, args=(chunk, ), kwargs={"show_masked": show_masked})
+                procs.append(proc)
+                proc.start()
+
+        for proc in procs:
+            proc.join()
+
+def multi_process_video(chunk, show_masked):
+    for vid_path in chunk:
+        process_video(vid_path, show_masked)
+
+
+def process_video(video_path, show_masked):
+    print("PID-%s is processing single video path: %s" % (os.getpid(), video_path))
+    input_dir, vid= os.path.split(video_path)
+    ds_root = os.path.abspath(os.path.join(input_dir, ".."))
 
     capture_dir, label_dir, output_dir  = make_video_subdir(ds_root)
     capture_output_path = os.path.join(capture_dir, vid[:-SUFFIX_LENGTH])
@@ -33,7 +57,7 @@ for vid in os.listdir(input_dir):
     video_FourCC = cv2.VideoWriter_fourcc(*'XVID')
     video_fps = vid.get(cv2.CAP_PROP_FPS)
     video_size = (int(vid.get(cv2.CAP_PROP_FRAME_WIDTH)),
-                  int(vid.get(cv2.CAP_PROP_FRAME_HEIGHT)))
+                int(vid.get(cv2.CAP_PROP_FRAME_HEIGHT)))
     DETECT_EVERY_N_FRAMES = round(video_fps)  # detect every second
     # out = cv2.VideoWriter(video_output_path, video_FourCC, video_fps, video_size)
 
@@ -68,7 +92,7 @@ for vid in os.listdir(input_dir):
 
         # template matching
         if idx % DETECT_EVERY_N_FRAMES == 0:
-            print("Current frame: %d" % idx)
+            # print("Current frame: %d" % idx)
             for r in region_list:
                 if r.deleted_time > 0:
                     continue
@@ -117,7 +141,7 @@ for vid in os.listdir(input_dir):
                 if r.parked_time > ILLEGAL_PARKED_THRESHOLD and r.deleted_time < 1:
                     thickness = (image.size[0] + image.size[1]) // 300
                     font = ImageFont.truetype(font='font/FiraMono-Medium.otf',
-                                              size=np.floor(3e-2 * image.size[1] + 0.5).astype('int32'))
+                                            size=np.floor(3e-2 * image.size[1] + 0.5).astype('int32'))
                     label = "%ds,%d" % (r.parked_time, r.tracked)
                     draw = ImageDraw.Draw(image_canvas)
 
@@ -146,7 +170,7 @@ for vid in os.listdir(input_dir):
                     }
                     json_text = json.dumps(json_dict)
                     file.write(json_text + "\n")
-                    print(json_text)
+                    # print(json_text)
 
                     if top - label_size[1] >= 0:
                         text_origin = np.array([left, top - label_size[1]])
@@ -215,3 +239,15 @@ for vid in os.listdir(input_dir):
         #     break
         idx += 1
     # yolo.close_session()
+
+if __name__ == '__main__':
+    start = time.time()
+    parser = argparse.ArgumentParser("YOLOX-Tracker Demo!")
+    parser.add_argument('-n', "--name", type=str, default="ISLab", help="ISLab|xd_full, choose the dataset to run the experiment")
+    parser.add_argument('-p', "--path", type=str, default="videos/ISLab/input/ISLab-13.mp44", help="choose a video to be processed")
+    parser.add_argument('-m', '--mask', action="store_true", help="show masked area or not")   # default False， --mask changes the parameter to True
+    args = parser.parse_args()
+
+    multi_worker(args)
+    end = time.time()
+    print("Processing time: ", end - start)
