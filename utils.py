@@ -20,8 +20,9 @@ SAVE_IMAGE_RES = True  # whether to save image results
 DRAW_ON_DETECTION_RESULTS = True  # whether to draw the detection results based on yolo detection
 MATCH_TEMPLATE_ON_GREY = True  # whether to convert to grey scale when doing template matching
 
-EVALUATION_IOU_THRESHOLD = 0.3
+EVALUATION_IOU_THRESHOLD = 0.1
 ILLEGAL_PARKING_MAX_RATIO = 0.3
+NOT_IN_IOU_THRESHOLD = 0.3  # 判断两个box是否为同一个，最小的IOU
 
 class Region(object):
     def __init__(self, box, type='unknown'):
@@ -128,5 +129,5 @@ def get_mask_regions(mask_path, pic_name):
 
 def get_exp_paras():
     name = ""
-    name = name + str(ILLEGAL_PARKING_MAX_RATIO) + "_" + str(EVALUATION_IOU_THRESHOLD)
+    name = name + str(ILLEGAL_PARKING_MAX_RATIO) + "_" + str(EVALUATION_IOU_THRESHOLD) + "_" + str(NOT_IN_IOU_THRESHOLD)
     return name
