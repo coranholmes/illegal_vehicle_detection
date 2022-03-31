@@ -10,6 +10,7 @@ from PIL import Image, ImageFont, ImageDraw
 from multiprocessing import Process
 from yolo import YOLO
 from utils import *
+from shapely.geometry import Polygon, Point
 
 
 def multi_worker(args):
@@ -49,6 +50,8 @@ def process_video(video_path, show_masked):
     label_output_path = os.path.join(label_dir, vid[:-SUFFIX_LENGTH] + '.txt')
     video_output_path = os.path.join(output_dir, vid)
     file = open(label_output_path, 'w')
+    mask_path = os.path.join(ds_root, 'mask', 'mask.json')
+    mask_regions = get_mask_regions(mask_path, vid[:-SUFFIX_LENGTH] + ".jpg")
 
     vid = cv2.VideoCapture(video_path)
     if not vid.isOpened():
@@ -94,6 +97,21 @@ def process_video(video_path, show_masked):
         if idx % DETECT_EVERY_N_FRAMES == 0:
             # print("Current frame: %d" % idx)
             for r in region_list:
+                # 在mask区域的不处理：
+                in_illegal_area = True
+                x1, y1, x2, y2 = r.left, r.top, r.right, r.bottom  # TODO 检查
+                poly1 = Polygon([(x1,y1),(x1,y2),(x2,y2),(x2,y1)])  # dtected bbox
+                for poly2 in mask_regions:
+                    poly2 = Polygon(poly2)
+                    intersection_area = poly1.intersection(poly2).area
+                    a = poly1.area
+                    if intersection_area / a <= ILLEGAL_PARKING_MAX_RATIO:
+                        in_illegal_area = False
+                        # print(idx, (x1, y1, x2, y2))
+                        break                
+                if not in_illegal_area:
+                    continue
+
                 if r.deleted_time > 0:
                     continue
                 else:
@@ -187,6 +205,16 @@ def process_video(video_path, show_masked):
                     draw.text(text_origin, label, fill=(0, 0, 0), font=font)
                     del draw
             result = cv2.cvtColor(np.asarray(image_canvas), cv2.COLOR_RGB2BGR)
+
+            if show_masked:  # if True, draw the masked area
+                alpha = 0.3
+                int_coords = lambda x: np.array(x).round().astype(np.int32)
+                overlay = result.copy()
+                for poly2 in mask_regions:
+                    poly2 = Polygon(poly2)
+                    exterior = [int_coords(poly2.exterior.coords)]
+                    cv2.fillPoly(overlay, exterior, color=(0, 255, 255))
+                cv2.addWeighted(overlay, alpha, result, 1 - alpha, 0, result)            
 
             if SAVE_IMAGE_RES:
                 make_dir(capture_output_path)

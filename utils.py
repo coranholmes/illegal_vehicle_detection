@@ -6,7 +6,7 @@
 
 
 import numpy as np
-import os
+import os,sys,json
 
 DS_NAME = 'ISLab'  # current support 'ISLab' and 'xd_ds'
 SUFFIX_LENGTH = 4  # the length of suffix (.mp4: length = 4)
@@ -15,13 +15,13 @@ SEE_FRAMES_THRESHOLD = 1  # in case template match doesn't work well on some fra
 MAP_REGION_THRESHOLD = 0.85  # iou must be larger than this threshold to be recognized as the same ROI (default = 0.7)
 ILLEGAL_PARKED_THRESHOLD = 5  # if the vehicle parks more than t frames, it will be marked as illegal
 RESET_THRESHOLD = 1  # in case yolo doesn't work well on some frames, the algo keeps the memory of the detection history, but if the object is not detected within t frames, the region will be reset (default = 20)
-VEHICLES = ['car', 'bicycle', 'motorbike', 'bus', 'truck']
+VEHICLES = ['car', 'bus', 'truck']
 SAVE_IMAGE_RES = True  # whether to save image results
 DRAW_ON_DETECTION_RESULTS = True  # whether to draw the detection results based on yolo detection
 MATCH_TEMPLATE_ON_GREY = True  # whether to convert to grey scale when doing template matching
 
-EVALUATION_IOU_THRESHOLD = 0.6
-
+EVALUATION_IOU_THRESHOLD = 0.3
+ILLEGAL_PARKING_MAX_RATIO = 0.3
 
 class Region(object):
     def __init__(self, box, type='unknown'):
@@ -102,3 +102,31 @@ def make_video_subdir(ds_root):
     video_output_path = os.path.join(ds_root, 'output')
     make_dir(video_output_path)
     return capture_output_path, text_output_path, video_output_path
+
+def get_mask_regions(mask_path, pic_name):
+    print("Open mask file " + mask_path)
+
+    mask_file = open(mask_path)
+    mask_dict = json.load(mask_file)
+
+    for i in range(len(mask_dict)):
+        if mask_dict[i]["imageName"] == pic_name:
+            masks = mask_dict[i]["Data"]
+            mask_regions = []
+
+            if len(masks) > 0:
+                masks = masks["svgArr"]
+                for poly in masks:
+                    poly = poly["data"]
+                    points = []
+                    for p in poly:
+                        points.append((p["x"], p["y"]))
+                    mask_regions.append(points)
+            return mask_regions
+    print("Cannot find the mask regions!")
+    sys.exit(-1)
+
+def get_exp_paras():
+    name = ""
+    name = name + str(ILLEGAL_PARKING_MAX_RATIO) + "_" + str(EVALUATION_IOU_THRESHOLD)
+    return name

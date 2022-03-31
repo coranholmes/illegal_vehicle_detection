@@ -74,27 +74,25 @@ def process_label(label_path, gt_path, by_frame=False):
         gts[d["frame"]][d["id"]] = [d["top"], d["left"], d["bottom"], d["right"]]
         gt_ids_set.add(d["id"])
 
-    positives = dict()
+    decs = dict()
     p = 0
-    dec_ids_set = set()
+    # dec_ids_set = set()
     for line in label_file:
         # {"frame": 210, "id": 6, "type": "bus", "top": 212, "left": 117, "bottom": 343, "right": 286, "parked_time": 5, "detected": "YES"}
         d = json.loads(line)
         if d["detected"] == "YES":  # TODO positives做预处理删除特别小的框
             p += 1
-            dec_ids_set.add(d["id"])
-            if d["frame"] not in positives:
-                positives[d["frame"]] = dict()
-            positives[d["frame"]][d["id"]] = [
-                d["top"],
-                d["left"],
-                d["bottom"],
-                d["right"],
-            ]
-    p2 = len(
-        dec_ids_set
-    )  # p is the number of detected bounding boxes, p2 is the number of detected ids
-    print("detected ids:", dec_ids_set, "\tgt ids:", gt_ids_set)
+            # dec_ids_set.add(d["id"])
+            if d["frame"] not in decs:
+                decs[d["frame"]] = []
+            decs[d["frame"]].append(
+                [
+                    d["top"],
+                    d["left"],
+                    d["bottom"],
+                    d["right"],
+                ]
+            )
 
     tp, fn = 0, 0
     if (
@@ -105,11 +103,9 @@ def process_label(label_path, gt_path, by_frame=False):
             cur_frame_gt_cnt = len(gts[frame])
             match_cnt = 0
             for gt_id in gts[frame]:  #  遍历gt中的每个frame中的每个box
-                if frame in positives:
-                    for dec_id in positives[
-                        frame
-                    ]:  # 对于对应frame中每个detection到的box进行匹配(det 匹配 gt)
-                        iou = get_iou(gts[frame][gt_id], positives[frame][dec_id])
+                if frame in decs:
+                    for dec_id in range(len(decs[frame])):
+                        iou = get_iou(gts[frame][gt_id], decs[frame][dec_id])
                         if iou > EVALUATION_IOU_THRESHOLD:
                             tp += 1
                             match_cnt += 1
@@ -119,45 +115,50 @@ def process_label(label_path, gt_path, by_frame=False):
                                 print(
                                     frame,
                                     gts[frame][gt_id],
-                                    positives[frame][dec_id],
+                                    decs[frame][dec_id],
                                     iou,
                                     "iou threshold issue",
                                 )
-            if frame not in positives:  # fn
-                print(frame, gts[frame].keys(), [])
-            elif cur_frame_gt_cnt != len(positives[frame]):  # fn + 一部分fp
-                print(frame, gts[frame].keys(), positives[frame].keys())
+            # if frame not in decs:  # fn
+            #     print(frame, gts[frame].keys(), [])
+            # elif cur_frame_gt_cnt != len(decs[frame]):  # fn + 一部分fp
+            #     print(frame, gts[frame].keys(), decs[frame].keys())
             # else:
             #     print(frame, gts[frame].keys(), gts[frame].keys())
             fn = fn + (cur_frame_gt_cnt - match_cnt)  # fn就是没匹配到的
         fp = p - tp
     else:  # evaluate based on events
         gt_ids = []
-        dec_ids = []
         for frame in sorted(gts):  # 遍历gt中的每个frame
-            cur_frame_gt_cnt = len(gts[frame])
-            match_cnt = 0
             for gt_id in gts[frame]:  #  遍历gt中的每个frame中的每个box
                 if gt_id in gt_ids:  # 如果gt已经匹配过就跳过
                     continue
-                if frame in positives:
-                    for dec_id in positives[frame]:
-                        iou = get_iou(gts[frame][gt_id], positives[frame][dec_id])
+                if frame in decs:
+                    for dec_id in range(len(decs[frame])):
+                        iou = get_iou(gts[frame][gt_id], decs[frame][dec_id])
                         if iou > EVALUATION_IOU_THRESHOLD:
                             tp += 1
-                            match_cnt += 1
                             gt_ids.append(gt_id)
-                            dec_ids.append(dec_id)
-                            print(dec_id, "matches", gt_id)
-        if p2 < len(dec_ids):
-            print("============================", p2, len(dec_ids))
-            p2 = len(dec_ids)
+                            print(decs[frame][dec_id], "matches", gt_id, gts[frame][gt_id])
+
+        dec_regs = []
+        for frame in sorted(decs):
+             for dec_id in range(len(decs[frame])):
+                 if not_in(decs[frame][dec_id], dec_regs):
+                     dec_regs.append(decs[frame][dec_id])
+        p2 = len(dec_regs)
         fp = p2 - tp
         fn = len(gt_ids_set) - tp
 
     print("p:", p if by_frame else p2, "tp:", tp, "fp:", fp, "fn:", fn)
     return tp, fp, fn
 
+def not_in(reg, reg_lst):
+    for r in reg_lst:
+       iou = get_iou(r, reg)
+       if iou > 0.3:
+           return False
+    return True
 
 def get_iou(gt, dec):
     gt = np.array(gt)
