@@ -74,10 +74,13 @@ def process_video(video_path, show_masked):
     image = Image.fromarray(cur_img_cv)  # transfer OpenCV format to PIL.Image format
     image_canvas, out_boxes, out_scores, out_classes = yolo.detect_image(image)
 
+    rid = 0
+
     for i in range(len(out_boxes)):
         class_name = yolo.class_names[out_classes[i]]
         if class_name in VEHICLES:
-            region = Region(out_boxes[i], class_name)
+            rid += 1
+            region = Region(rid, out_boxes[i], class_name)
             region_list.append(region)
 
     idx = 1  # frame no.
@@ -134,7 +137,7 @@ def process_video(video_path, show_masked):
                     right = max_loc[0] + w
 
                     matched_box = np.array([top, left, bottom, right], dtype=np.float32)
-                    matched_region = Region(matched_box)
+                    matched_region = Region(-1, matched_box)
                     iou = r.get_iou(matched_region)
 
                     if iou > MATCH_TEMPLATE_THRESHOLD:
@@ -160,7 +163,7 @@ def process_video(video_path, show_masked):
                     thickness = (image.size[0] + image.size[1]) // 300
                     font = ImageFont.truetype(font='font/FiraMono-Medium.otf',
                                             size=np.floor(3e-2 * image.size[1] + 0.5).astype('int32'))
-                    label = "%ds,%d" % (r.parked_time, r.tracked)
+                    label = "%d,%ds,%d" % (r.id, r.parked_time, r.tracked)
                     draw = ImageDraw.Draw(image_canvas)
 
                     label_size = draw.textsize(label, font)
@@ -175,7 +178,7 @@ def process_video(video_path, show_masked):
                     # write the time and location info to json file
                     json_dict = {
                         'frame': idx,
-                        'id': "-1",
+                        'id': r.id,
                         'type': r.type,
                         'tracked': r.tracked,
                         'top': int(r.top),
@@ -187,7 +190,7 @@ def process_video(video_path, show_masked):
                         'detected': 'YES' if r.parked_time >= ILLEGAL_PARKED_THRESHOLD and r.tracked else 'NO'  # TODO tracked意思是啥？
                     }
                     json_text = json.dumps(json_dict)
-                    file.write(json_text + "\n")
+                    file.writelines(json_text + "\n")
                     # print(json_text)
 
                     if top - label_size[1] >= 0:
@@ -236,10 +239,12 @@ def process_video(video_path, show_masked):
             for i in range(len(out_boxes)):
                 class_name = yolo.class_names[out_classes[i]]
                 if class_name in VEHICLES:
-                    region = Region(out_boxes[i], class_name)
+                    region = Region(-1, out_boxes[i], class_name)
                     # judge whether the detected region is already in two lists
                     r_idx = region.find_region(region_list)
                     if r_idx == -1:  # if cannot find the region in list than append it to the list
+                        rid += 1
+                        region.id = rid
                         region_list.append(region)
                     else:
                         flag.append(r_idx)

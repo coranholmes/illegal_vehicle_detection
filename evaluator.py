@@ -109,7 +109,6 @@ def process_label(label_path, gt_path, by_frame=False):
                     if match_id != -1 and max_iou > EVALUATION_IOU_THRESHOLD:
                         tp += 1
                         match_cnt += 1
-                        break  # 如果一个dec被匹配到一个gt就跳出循环
                         # print(match_id, "matches", gt_id)
             fn = fn + (cur_frame_gt_cnt - match_cnt)  # fn就是没匹配到的
         fp = p - tp

@@ -25,8 +25,9 @@ ILLEGAL_PARKING_MAX_RATIO = 0.3
 NOT_IN_IOU_THRESHOLD = 0.3  # 判断两个box是否为同一个，最小的IOU
 
 class Region(object):
-    def __init__(self, box, type='unknown'):
+    def __init__(self, id, box, type='unknown'):
         top, left, bottom, right = box
+        self.id = id
         self.top = max(0, np.floor(top).astype('int32'))
         self.left = max(0, np.floor(left).astype('int32'))
         self.bottom = np.floor(bottom).astype('int32')
