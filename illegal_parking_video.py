@@ -247,7 +247,7 @@ def process_video(video_path, show_masked):
                         region.id = rid
                         region_list.append(region)
                     else:
-                        flag.append(r_idx)
+                        flag.append(r_idx)  # flag中存匹配到的region
 
             # for those regions in the list who are not mapped to, r.tracked = false, r.deleted_time += 1
             for i in range(region_list_len):

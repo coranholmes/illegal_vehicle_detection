@@ -11,16 +11,16 @@ import os,sys,json
 DS_NAME = 'ISLab'  # current support 'ISLab' and 'xd_ds'
 SUFFIX_LENGTH = 4  # the length of suffix (.mp4: length = 4)
 MATCH_TEMPLATE_THRESHOLD = 0.85  # iou must be larger than this threshold to match the template (default = 0.7)
-SEE_FRAMES_THRESHOLD = 1  # in case template match doesn't work well on some frames, this allows t frames of wrong template matching (default = 5)
+SEE_FRAMES_THRESHOLD = 3  # in case template match doesn't work well on some frames, this allows t frames of wrong template matching (default = 5)
 MAP_REGION_THRESHOLD = 0.85  # iou must be larger than this threshold to be recognized as the same ROI (default = 0.7)
 ILLEGAL_PARKED_THRESHOLD = 5  # if the vehicle parks more than t frames, it will be marked as illegal
-RESET_THRESHOLD = 1  # in case yolo doesn't work well on some frames, the algo keeps the memory of the detection history, but if the object is not detected within t frames, the region will be reset (default = 20)
+RESET_THRESHOLD = 3  # in case yolo doesn't work well on some frames, the algo keeps the memory of the detection history, but if the object is not detected within t frames, the region will be reset (default = 20)
 VEHICLES = ['car', 'bus', 'truck']
 SAVE_IMAGE_RES = True  # whether to save image results
 DRAW_ON_DETECTION_RESULTS = True  # whether to draw the detection results based on yolo detection
 MATCH_TEMPLATE_ON_GREY = True  # whether to convert to grey scale when doing template matching
 
-EVALUATION_IOU_THRESHOLD = 0.1
+EVALUATION_IOU_THRESHOLD = 0
 ILLEGAL_PARKING_MAX_RATIO = 0.3
 NOT_IN_IOU_THRESHOLD = 0.3  # 判断两个box是否为同一个，最小的IOU
 
@@ -130,5 +130,5 @@ def get_mask_regions(mask_path, pic_name):
 
 def get_exp_paras():
     name = ""
-    name = name + str(ILLEGAL_PARKING_MAX_RATIO) + "_" + str(EVALUATION_IOU_THRESHOLD) + "_" + str(NOT_IN_IOU_THRESHOLD)
+    name = name + str(ILLEGAL_PARKING_MAX_RATIO) + "_" + str(EVALUATION_IOU_THRESHOLD) + "_" + str(NOT_IN_IOU_THRESHOLD) + "__MD_" + str(SEE_FRAMES_THRESHOLD) + "_" + str(RESET_THRESHOLD)
     return name
