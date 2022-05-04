@@ -1,0 +1,10 @@
+{"frame": 480, "id": 242, "type": "car", "top": 475, "left": 0, "bottom": 713, "right": 351}
+{"frame": 510, "id": 242, "type": "car", "top": 475, "left": 0, "bottom": 713, "right": 351}
+{"frame": 540, "id": 242, "type": "car", "top": 475, "left": 0, "bottom": 713, "right": 351}
+{"frame": 570, "id": 242, "type": "car", "top": 475, "left": 0, "bottom": 713, "right": 351}
+{"frame": 600, "id": 242, "type": "car", "top": 475, "left": 0, "bottom": 713, "right": 351}
+{"frame": 630, "id": 242, "type": "car", "top": 475, "left": 0, "bottom": 713, "right": 351}
+{"frame": 660, "id": 242, "type": "car", "top": 475, "left": 0, "bottom": 713, "right": 351}
+{"frame": 690, "id": 242, "type": "car", "top": 475, "left": 0, "bottom": 713, "right": 351}
+{"frame": 720, "id": 242, "type": "car", "top": 475, "left": 0, "bottom": 713, "right": 351}
+{"frame": 750, "id": 242, "type": "car", "top": 475, "left": 0, "bottom": 713, "right": 351}

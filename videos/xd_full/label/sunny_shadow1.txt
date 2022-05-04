@@ -1,0 +1,1 @@
+{"parked_time": 7, "top": 35, "tracked": false, "occluded_time": 1, "id": 560, "right": 859, "left": 827, "bottom": 62, "frame": 2250, "detected": "NO", "type": "car"}

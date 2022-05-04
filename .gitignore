@@ -1,5 +1,7 @@
 *.jpg
 *.png
+*.mp4
+*.mpg
 *.weights
 *.h5
 logs/
@@ -109,6 +111,5 @@ ENV/
 
 # cwl_files
 images/
-videos/
 
 .idea

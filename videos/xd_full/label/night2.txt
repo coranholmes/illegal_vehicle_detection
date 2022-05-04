@@ -1,0 +1,6 @@
+{"parked_time": 6, "top": 123, "tracked": true, "occluded_time": 0, "id": 538, "right": 1707, "left": 1647, "bottom": 161, "frame": 1170, "detected": "YES", "type": "car"}
+{"parked_time": 6, "top": 123, "tracked": true, "occluded_time": 0, "id": 538, "right": 1707, "left": 1647, "bottom": 161, "frame": 1200, "detected": "YES", "type": "car"}
+{"parked_time": 6, "top": 123, "tracked": true, "occluded_time": 0, "id": 538, "right": 1707, "left": 1647, "bottom": 161, "frame": 1230, "detected": "YES", "type": "car"}
+{"parked_time": 8, "top": 123, "tracked": true, "occluded_time": 0, "id": 538, "right": 1707, "left": 1647, "bottom": 161, "frame": 1320, "detected": "YES", "type": "car"}
+{"parked_time": 10, "top": 123, "tracked": true, "occluded_time": 0, "id": 538, "right": 1707, "left": 1647, "bottom": 161, "frame": 1410, "detected": "YES", "type": "car"}
+{"parked_time": 6, "top": 123, "tracked": true, "occluded_time": 0, "id": 1399, "right": 1707, "left": 1644, "bottom": 163, "frame": 2940, "detected": "YES", "type": "car"}

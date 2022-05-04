@@ -1,0 +1,78 @@
+[
+    {
+        "ProjectName": "sussex2",
+        "createdAt": "2022-03-29 17:35:40",
+        "Seconds": 24,
+        "Data": {
+            "svgArr": [
+                {
+                    "data": [
+                        {
+                            "x": 144.850000000000022737,
+                            "y": 138.5
+                        },
+                        {
+                            "x": 243.850000000000022737,
+                            "y": 163.5
+                        },
+                        {
+                            "x": 317.850000000000022737,
+                            "y": 188.5
+                        },
+                        {
+                            "x": 384.850000000000022737,
+                            "y": 216.5
+                        },
+                        {
+                            "x": 450.850000000000022737,
+                            "y": 251.5
+                        },
+                        {
+                            "x": 528.850000000000022737,
+                            "y": 303.5
+                        },
+                        {
+                            "x": 547.850000000000022737,
+                            "y": 302.5
+                        },
+                        {
+                            "x": 476.850000000000022737,
+                            "y": 243.5
+                        },
+                        {
+                            "x": 410.850000000000022737,
+                            "y": 202.5
+                        },
+                        {
+                            "x": 310.850000000000022737,
+                            "y": 169.5
+                        },
+                        {
+                            "x": 241.850000000000022737,
+                            "y": 151.5
+                        }
+                    ],
+                    "radius": 3,
+                    "subarea": 1,
+                    "id": "46a3ecf6-d476-48ea-9a0c-c095bf6bd5ac",
+                    "color": "#FF0000",
+                    "name": "no_parking_area",
+                    "tool": "polygon",
+                    "uuid": "d306ca70-af43-11ec-8ebb-3bf33edf578a",
+                    "isClosed": true,
+                    "secondaryLabel": []
+                }
+            ],
+            "classifications": []
+        },
+        "LabelType": "Submit",
+        "Reviews": "Ready for QA",
+        "imagePath": "http:\/\/images.awkvector.comhttps:\/\/jxxl-tagtag-juexing.oss-cn-hangzhou.aliyuncs.com\/8673\/2022\/03\/29\/3ef0bfb4ac9a779dca7fac5df0bcba00.jpg",
+        "imageWidth": 720,
+        "imageHeight": 576,
+        "imageSize": 132109,
+        "id": 3748340,
+        "imageName": "SussexTrafficDay1.jpg",
+        "DataSetName": "sussex2"
+    }
+]

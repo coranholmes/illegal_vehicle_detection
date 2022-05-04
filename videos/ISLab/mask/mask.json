@@ -1,0 +1,1038 @@
+[
+    {
+        "ProjectName": "ISLab_mask_illegal",
+        "createdAt": "2022-03-21 15:34:09",
+        "Seconds": 11,
+        "Data": {
+            "svgArr": [
+                {
+                    "data": [
+                        {
+                            "x": 0,
+                            "y": 0
+                        },
+                        {
+                            "x": 0,
+                            "y": 480
+                        },
+                        {
+                            "x": 640,
+                            "y": 480
+                        },
+                        {
+                            "x": 640,
+                            "y": 0
+                        }
+                    ],
+                    "radius": 3,
+                    "subarea": 1,
+                    "id": "46a3ecf6-d476-48ea-9a0c-c095bf6bd5ac",
+                    "color": "#FF0000",
+                    "name": "no_parking_area",
+                    "tool": "polygon",
+                    "uuid": "bfb60200-a8eb-11ec-b229-73a97896fcaa",
+                    "isClosed": true,
+                    "secondaryLabel": []
+                }
+            ],
+            "classifications": []
+        },
+        "LabelType": "submitted",
+        "Reviews": "wait_inspection",
+        "imagePath": "http:\/\/images.awkvector.comhttps:\/\/jxxl-tagtag-juexing.oss-cn-hangzhou.aliyuncs.com\/8673\/2022\/03\/18\/1736afd7760c28bb9a24b47c583bec41.jpg",
+        "imageWidth": 640,
+        "imageHeight": 480,
+        "imageSize": 55558,
+        "id": 3747160,
+        "imageName": "ISLab-16.jpg",
+        "DataSetName": "ISLab"
+    },
+    {
+        "ProjectName": "ISLab_mask_illegal",
+        "createdAt": "2022-03-21 15:34:09",
+        "Seconds": 9,
+        "Data": {
+            "svgArr": [
+                {
+                    "data": [
+                        {
+                            "x": 0,
+                            "y": 0
+                        },
+                        {
+                            "x": 0,
+                            "y": 480
+                        },
+                        {
+                            "x": 640,
+                            "y": 480
+                        },
+                        {
+                            "x": 640,
+                            "y": 0
+                        }
+                    ],
+                    "radius": 3,
+                    "subarea": 1,
+                    "id": "46a3ecf6-d476-48ea-9a0c-c095bf6bd5ac",
+                    "color": "#FF0000",
+                    "name": "no_parking_area",
+                    "tool": "polygon",
+                    "uuid": "aa5c9d60-a8eb-11ec-b229-73a97896fcaa",
+                    "isClosed": true,
+                    "secondaryLabel": []
+                }
+            ],
+            "classifications": []
+        },
+        "LabelType": "submitted",
+        "Reviews": "wai't",
+        "imagePath": "http:\/\/images.awkvector.comhttps:\/\/jxxl-tagtag-juexing.oss-cn-hangzhou.aliyuncs.com\/8673\/2022\/03\/18\/8c97eea1fe99386c13a2707bc863def1.jpg",
+        "imageWidth": 640,
+        "imageHeight": 480,
+        "imageSize": 42539,
+        "id": 3747159,
+        "imageName": "ISLab-15.jpg",
+        "DataSetName": "ISLab"
+    },
+    {
+        "ProjectName": "ISLab_mask_illegal",
+        "createdAt": "2022-03-21 15:34:09",
+        "Seconds": 174,
+        "Data": {
+            "svgArr": [
+                {
+                    "data": [
+                        {
+                            "x": 640,
+                            "y": 432
+                        },
+                        {
+                            "x": 492.850000000000022737,
+                            "y": 360
+                        },
+                        {
+                            "x": 431.850000000000022737,
+                            "y": 337
+                        },
+                        {
+                            "x": 387.850000000000022737,
+                            "y": 329
+                        },
+                        {
+                            "x": 348.850000000000022737,
+                            "y": 324
+                        },
+                        {
+                            "x": 97.8500000000000227374,
+                            "y": 321
+                        },
+                        {
+                            "x": 0,
+                            "y": 350
+                        },
+                        {
+                            "x": 0,
+                            "y": 281
+                        },
+                        {
+                            "x": 100.850000000000022737,
+                            "y": 275
+                        },
+                        {
+                            "x": 173.850000000000022737,
+                            "y": 257
+                        },
+                        {
+                            "x": 144.850000000000022737,
+                            "y": 278
+                        },
+                        {
+                            "x": 249.850000000000022737,
+                            "y": 283
+                        },
+                        {
+                            "x": 326.850000000000022737,
+                            "y": 241
+                        },
+                        {
+                            "x": 354.850000000000022737,
+                            "y": 241
+                        },
+                        {
+                            "x": 329.850000000000022737,
+                            "y": 277
+                        },
+                        {
+                            "x": 373.850000000000022737,
+                            "y": 277
+                        },
+                        {
+                            "x": 402.850000000000022737,
+                            "y": 270
+                        },
+                        {
+                            "x": 411.850000000000022737,
+                            "y": 266
+                        },
+                        {
+                            "x": 414.850000000000022737,
+                            "y": 256
+                        },
+                        {
+                            "x": 426.850000000000022737,
+                            "y": 247
+                        },
+                        {
+                            "x": 439.850000000000022737,
+                            "y": 265
+                        },
+                        {
+                            "x": 455.850000000000022737,
+                            "y": 275
+                        },
+                        {
+                            "x": 509.850000000000022737,
+                            "y": 295
+                        },
+                        {
+                            "x": 545.850000000000022737,
+                            "y": 286
+                        },
+                        {
+                            "x": 544.850000000000022737,
+                            "y": 273
+                        },
+                        {
+                            "x": 535.850000000000022737,
+                            "y": 266
+                        },
+                        {
+                            "x": 521.850000000000022737,
+                            "y": 266
+                        },
+                        {
+                            "x": 507.850000000000022737,
+                            "y": 247
+                        },
+                        {
+                            "x": 533.850000000000022737,
+                            "y": 247
+                        },
+                        {
+                            "x": 621.850000000000022737,
+                            "y": 313
+                        },
+                        {
+                            "x": 640,
+                            "y": 316
+                        }
+                    ],
+                    "radius": 3,
+                    "subarea": 1,
+                    "id": "46a3ecf6-d476-48ea-9a0c-c095bf6bd5ac",
+                    "color": "#FF0000",
+                    "name": "no_parking_area",
+                    "tool": "polygon",
+                    "uuid": "4a7957d0-a8eb-11ec-b229-73a97896fcaa",
+                    "isClosed": true,
+                    "secondaryLabel": []
+                }
+            ],
+            "classifications": []
+        },
+        "LabelType": "submitted",
+        "Reviews": "wait_inspection",
+        "imagePath": "http:\/\/images.awkvector.comhttps:\/\/jxxl-tagtag-juexing.oss-cn-hangzhou.aliyuncs.com\/8673\/2022\/03\/18\/5c6b9c21bb3dfcb67fea8974dae957f2.jpg",
+        "imageWidth": 640,
+        "imageHeight": 480,
+        "imageSize": 181253,
+        "id": 3747158,
+        "imageName": "ISLab-14.jpg",
+        "DataSetName": "ISLab"
+    },
+    {
+        "ProjectName": "ISLab_mask_illegal",
+        "createdAt": "2022-03-21 15:34:09",
+        "Seconds": 67,
+        "Data": {
+            "svgArr": [
+                {
+                    "data": [
+                        {
+                            "x": 1.85000000000002273737,
+                            "y": 261
+                        },
+                        {
+                            "x": 640,
+                            "y": 311
+                        },
+                        {
+                            "x": 593.850000000000022737,
+                            "y": 321
+                        },
+                        {
+                            "x": 560.850000000000022737,
+                            "y": 323
+                        },
+                        {
+                            "x": 546.850000000000022737,
+                            "y": 330
+                        },
+                        {
+                            "x": 538.850000000000022737,
+                            "y": 343
+                        },
+                        {
+                            "x": 542.850000000000022737,
+                            "y": 357
+                        },
+                        {
+                            "x": 535.850000000000022737,
+                            "y": 409
+                        },
+                        {
+                            "x": 407.850000000000022737,
+                            "y": 389
+                        },
+                        {
+                            "x": 388.850000000000022737,
+                            "y": 347
+                        },
+                        {
+                            "x": 357.850000000000022737,
+                            "y": 343
+                        },
+                        {
+                            "x": 245.850000000000022737,
+                            "y": 329
+                        },
+                        {
+                            "x": 214.850000000000022737,
+                            "y": 356
+                        },
+                        {
+                            "x": 130.850000000000022737,
+                            "y": 347
+                        },
+                        {
+                            "x": 141.850000000000022737,
+                            "y": 317
+                        },
+                        {
+                            "x": 134.850000000000022737,
+                            "y": 300
+                        },
+                        {
+                            "x": 113.850000000000022737,
+                            "y": 290
+                        },
+                        {
+                            "x": 83.8500000000000227374,
+                            "y": 285
+                        },
+                        {
+                            "x": 44.8500000000000227374,
+                            "y": 287
+                        },
+                        {
+                            "x": 17.8500000000000227374,
+                            "y": 296
+                        },
+                        {
+                            "x": 0,
+                            "y": 312
+                        }
+                    ],
+                    "radius": 3,
+                    "subarea": 1,
+                    "id": "46a3ecf6-d476-48ea-9a0c-c095bf6bd5ac",
+                    "color": "#FF0000",
+                    "name": "no_parking_area",
+                    "tool": "polygon",
+                    "uuid": "df14f8f0-a8ea-11ec-b229-73a97896fcaa",
+                    "isClosed": true,
+                    "secondaryLabel": []
+                }
+            ],
+            "classifications": []
+        },
+        "LabelType": "submitted",
+        "Reviews": "wait_inspection",
+        "imagePath": "http:\/\/images.awkvector.comhttps:\/\/jxxl-tagtag-juexing.oss-cn-hangzhou.aliyuncs.com\/8673\/2022\/03\/18\/d1eaf2dfd917a015a36c4f303d8e7450.jpg",
+        "imageWidth": 640,
+        "imageHeight": 480,
+        "imageSize": 113428,
+        "id": 3747157,
+        "imageName": "ISLab-13.jpg",
+        "DataSetName": "ISLab"
+    },
+    {
+        "ProjectName": "ISLab_mask_illegal",
+        "createdAt": "2022-03-21 15:34:09",
+        "Seconds": 16,
+        "Data": {
+            "svgArr": [
+                {
+                    "data": [
+                        {
+                            "x": 202.850000000000022737,
+                            "y": 77
+                        },
+                        {
+                            "x": 0,
+                            "y": 450
+                        },
+                        {
+                            "x": 0,
+                            "y": 480
+                        },
+                        {
+                            "x": 640,
+                            "y": 480
+                        },
+                        {
+                            "x": 640,
+                            "y": 344
+                        },
+                        {
+                            "x": 426.850000000000022737,
+                            "y": 85
+                        }
+                    ],
+                    "radius": 3,
+                    "subarea": 1,
+                    "id": "46a3ecf6-d476-48ea-9a0c-c095bf6bd5ac",
+                    "color": "#FF0000",
+                    "name": "no_parking_area",
+                    "tool": "polygon",
+                    "uuid": "ccaee3b0-a8ea-11ec-b229-73a97896fcaa",
+                    "isClosed": true,
+                    "secondaryLabel": []
+                }
+            ],
+            "classifications": []
+        },
+        "LabelType": "submitted",
+        "Reviews": "wait_inspection",
+        "imagePath": "http:\/\/images.awkvector.comhttps:\/\/jxxl-tagtag-juexing.oss-cn-hangzhou.aliyuncs.com\/8673\/2022\/03\/18\/58c95f246bcbc6fc544960a5b65ab894.jpg",
+        "imageWidth": 640,
+        "imageHeight": 480,
+        "imageSize": 97073,
+        "id": 3747156,
+        "imageName": "ISLab-12.jpg",
+        "DataSetName": "ISLab"
+    },
+    {
+        "ProjectName": "ISLab_mask_illegal",
+        "createdAt": "2022-03-21 15:34:09",
+        "Seconds": 18,
+        "Data": {
+            "svgArr": [
+                {
+                    "data": [
+                        {
+                            "x": 199.850000000000022737,
+                            "y": 78
+                        },
+                        {
+                            "x": 0,
+                            "y": 446
+                        },
+                        {
+                            "x": 0,
+                            "y": 480
+                        },
+                        {
+                            "x": 640,
+                            "y": 480
+                        },
+                        {
+                            "x": 640,
+                            "y": 344
+                        },
+                        {
+                            "x": 425.850000000000022737,
+                            "y": 85
+                        }
+                    ],
+                    "radius": 3,
+                    "subarea": 1,
+                    "id": "46a3ecf6-d476-48ea-9a0c-c095bf6bd5ac",
+                    "color": "#FF0000",
+                    "name": "no_parking_area",
+                    "tool": "polygon",
+                    "uuid": "c0626410-a8ea-11ec-b229-73a97896fcaa",
+                    "isClosed": true,
+                    "secondaryLabel": []
+                }
+            ],
+            "classifications": []
+        },
+        "LabelType": "submitted",
+        "Reviews": "wait_inspection",
+        "imagePath": "http:\/\/images.awkvector.comhttps:\/\/jxxl-tagtag-juexing.oss-cn-hangzhou.aliyuncs.com\/8673\/2022\/03\/18\/103f6b0a75dec79fa7eab341f2b575c1.jpg",
+        "imageWidth": 640,
+        "imageHeight": 480,
+        "imageSize": 102009,
+        "id": 3747155,
+        "imageName": "ISLab-11.jpg",
+        "DataSetName": "ISLab"
+    },
+    {
+        "ProjectName": "ISLab_mask_illegal",
+        "createdAt": "2022-03-21 15:34:09",
+        "Seconds": 21,
+        "Data": {
+            "svgArr": [
+                {
+                    "data": [
+                        {
+                            "x": 200.850000000000022737,
+                            "y": 76
+                        },
+                        {
+                            "x": 0,
+                            "y": 451
+                        },
+                        {
+                            "x": 0,
+                            "y": 480
+                        },
+                        {
+                            "x": 640,
+                            "y": 480
+                        },
+                        {
+                            "x": 640,
+                            "y": 352
+                        },
+                        {
+                            "x": 428.850000000000022737,
+                            "y": 86
+                        }
+                    ],
+                    "radius": 3,
+                    "subarea": 1,
+                    "id": "46a3ecf6-d476-48ea-9a0c-c095bf6bd5ac",
+                    "color": "#FF0000",
+                    "name": "no_parking_area",
+                    "tool": "polygon",
+                    "uuid": "b39e4370-a8ea-11ec-b229-73a97896fcaa",
+                    "isClosed": true,
+                    "secondaryLabel": []
+                }
+            ],
+            "classifications": []
+        },
+        "LabelType": "submitted",
+        "Reviews": "wait_inspection",
+        "imagePath": "http:\/\/images.awkvector.comhttps:\/\/jxxl-tagtag-juexing.oss-cn-hangzhou.aliyuncs.com\/8673\/2022\/03\/18\/d60ee71df8974b4dcb12e8e33210ec87.jpg",
+        "imageWidth": 640,
+        "imageHeight": 480,
+        "imageSize": 100001,
+        "id": 3747154,
+        "imageName": "ISLab-10.jpg",
+        "DataSetName": "ISLab"
+    },
+    {
+        "ProjectName": "ISLab_mask_illegal",
+        "createdAt": "2022-03-21 15:34:09",
+        "Seconds": 16,
+        "Data": {
+            "svgArr": [
+                {
+                    "data": [
+                        {
+                            "x": 200.850000000000022737,
+                            "y": 75
+                        },
+                        {
+                            "x": 0,
+                            "y": 449
+                        },
+                        {
+                            "x": 0,
+                            "y": 480
+                        },
+                        {
+                            "x": 640,
+                            "y": 480
+                        },
+                        {
+                            "x": 640,
+                            "y": 344
+                        },
+                        {
+                            "x": 426.850000000000022737,
+                            "y": 87
+                        }
+                    ],
+                    "radius": 3,
+                    "subarea": 1,
+                    "id": "46a3ecf6-d476-48ea-9a0c-c095bf6bd5ac",
+                    "color": "#FF0000",
+                    "name": "no_parking_area",
+                    "tool": "polygon",
+                    "uuid": "a8edc090-a8ea-11ec-b229-73a97896fcaa",
+                    "isClosed": true,
+                    "secondaryLabel": []
+                }
+            ],
+            "classifications": []
+        },
+        "LabelType": "submitted",
+        "Reviews": "wait_inspection",
+        "imagePath": "http:\/\/images.awkvector.comhttps:\/\/jxxl-tagtag-juexing.oss-cn-hangzhou.aliyuncs.com\/8673\/2022\/03\/18\/b9c0391a4455d6e31084e28fdf09ebed.jpg",
+        "imageWidth": 640,
+        "imageHeight": 480,
+        "imageSize": 104149,
+        "id": 3747153,
+        "imageName": "ISLab-09.jpg",
+        "DataSetName": "ISLab"
+    },
+    {
+        "ProjectName": "ISLab_mask_illegal",
+        "createdAt": "2022-03-21 15:34:09",
+        "Seconds": 21,
+        "Data": {
+            "svgArr": [
+                {
+                    "data": [
+                        {
+                            "x": 199.850000000000022737,
+                            "y": 77
+                        },
+                        {
+                            "x": 0,
+                            "y": 445
+                        },
+                        {
+                            "x": 0,
+                            "y": 480
+                        },
+                        {
+                            "x": 640,
+                            "y": 480
+                        },
+                        {
+                            "x": 640,
+                            "y": 344
+                        },
+                        {
+                            "x": 429.850000000000022737,
+                            "y": 85
+                        }
+                    ],
+                    "radius": 3,
+                    "subarea": 1,
+                    "id": "46a3ecf6-d476-48ea-9a0c-c095bf6bd5ac",
+                    "color": "#FF0000",
+                    "name": "no_parking_area",
+                    "tool": "polygon",
+                    "uuid": "98358260-a8ea-11ec-b229-73a97896fcaa",
+                    "isClosed": true,
+                    "secondaryLabel": []
+                }
+            ],
+            "classifications": []
+        },
+        "LabelType": "submitted",
+        "Reviews": "wait_inspection",
+        "imagePath": "http:\/\/images.awkvector.comhttps:\/\/jxxl-tagtag-juexing.oss-cn-hangzhou.aliyuncs.com\/8673\/2022\/03\/18\/6c26fa8f63c69b3935a301622aa5640b.jpg",
+        "imageWidth": 640,
+        "imageHeight": 480,
+        "imageSize": 102740,
+        "id": 3747152,
+        "imageName": "ISLab-08.jpg",
+        "DataSetName": "ISLab"
+    },
+    {
+        "ProjectName": "ISLab_mask_illegal",
+        "createdAt": "2022-03-21 15:34:09",
+        "Seconds": 60,
+        "Data": {
+            "svgArr": [
+                {
+                    "data": [
+                        {
+                            "x": 198.850000000000022737,
+                            "y": 75
+                        },
+                        {
+                            "x": 0,
+                            "y": 447
+                        },
+                        {
+                            "x": 0,
+                            "y": 480
+                        },
+                        {
+                            "x": 640,
+                            "y": 480
+                        },
+                        {
+                            "x": 640,
+                            "y": 369
+                        },
+                        {
+                            "x": 430.850000000000022737,
+                            "y": 87
+                        }
+                    ],
+                    "radius": 3,
+                    "subarea": 1,
+                    "id": "46a3ecf6-d476-48ea-9a0c-c095bf6bd5ac",
+                    "color": "#FF0000",
+                    "name": "no_parking_area",
+                    "tool": "polygon",
+                    "uuid": "7523d920-a8ea-11ec-b229-73a97896fcaa",
+                    "isClosed": true,
+                    "secondaryLabel": []
+                }
+            ],
+            "classifications": []
+        },
+        "LabelType": "submitted",
+        "Reviews": "wait_inspection",
+        "imagePath": "http:\/\/images.awkvector.comhttps:\/\/jxxl-tagtag-juexing.oss-cn-hangzhou.aliyuncs.com\/8673\/2022\/03\/18\/b712dacfe8a045d65854ff28f7957949.jpg",
+        "imageWidth": 640,
+        "imageHeight": 480,
+        "imageSize": 104730,
+        "id": 3747151,
+        "imageName": "ISLab-07.jpg",
+        "DataSetName": "ISLab"
+    },
+    {
+        "ProjectName": "ISLab_mask_illegal",
+        "createdAt": "2022-03-21 15:34:09",
+        "Seconds": 13,
+        "Data": {
+            "svgArr": [
+                {
+                    "data": [
+                        {
+                            "x": 0,
+                            "y": 0
+                        },
+                        {
+                            "x": 0,
+                            "y": 480
+                        },
+                        {
+                            "x": 640,
+                            "y": 480
+                        },
+                        {
+                            "x": 640,
+                            "y": 0
+                        }
+                    ],
+                    "radius": 3,
+                    "subarea": 1,
+                    "id": "46a3ecf6-d476-48ea-9a0c-c095bf6bd5ac",
+                    "color": "#FF0000",
+                    "name": "no_parking_area",
+                    "tool": "polygon",
+                    "uuid": "69b49a20-a8ea-11ec-b229-73a97896fcaa",
+                    "isClosed": true,
+                    "secondaryLabel": []
+                }
+            ],
+            "classifications": []
+        },
+        "LabelType": "submitted",
+        "Reviews": "wait_inspection",
+        "imagePath": "http:\/\/images.awkvector.comhttps:\/\/jxxl-tagtag-juexing.oss-cn-hangzhou.aliyuncs.com\/8673\/2022\/03\/18\/f8811e3428d16f64260d2c8c1cbd7018.jpg",
+        "imageWidth": 640,
+        "imageHeight": 480,
+        "imageSize": 120265,
+        "id": 3747150,
+        "imageName": "ISLab-06.jpg",
+        "DataSetName": "ISLab"
+    },
+    {
+        "ProjectName": "ISLab_mask_illegal",
+        "createdAt": "2022-03-21 15:34:09",
+        "Seconds": 10,
+        "Data": {
+            "svgArr": [
+                {
+                    "data": [
+                        {
+                            "x": 0,
+                            "y": 0
+                        },
+                        {
+                            "x": 0,
+                            "y": 480
+                        },
+                        {
+                            "x": 640,
+                            "y": 480
+                        },
+                        {
+                            "x": 640,
+                            "y": 0
+                        }
+                    ],
+                    "radius": 3,
+                    "subarea": 1,
+                    "id": "46a3ecf6-d476-48ea-9a0c-c095bf6bd5ac",
+                    "color": "#FF0000",
+                    "name": "no_parking_area",
+                    "tool": "polygon",
+                    "uuid": "5fcce580-a8ea-11ec-b229-73a97896fcaa",
+                    "isClosed": true,
+                    "secondaryLabel": []
+                }
+            ],
+            "classifications": []
+        },
+        "LabelType": "submitted",
+        "Reviews": "wait_inspection",
+        "imagePath": "http:\/\/images.awkvector.comhttps:\/\/jxxl-tagtag-juexing.oss-cn-hangzhou.aliyuncs.com\/8673\/2022\/03\/18\/44b4d4ac8376ab0cbd3903f8f8f15b65.jpg",
+        "imageWidth": 640,
+        "imageHeight": 480,
+        "imageSize": 118883,
+        "id": 3747149,
+        "imageName": "ISLab-05.jpg",
+        "DataSetName": "ISLab"
+    },
+    {
+        "ProjectName": "ISLab_mask_illegal",
+        "createdAt": "2022-03-21 15:34:09",
+        "Seconds": 35,
+        "Data": {
+            "svgArr": [
+                {
+                    "data": [
+                        {
+                            "x": 0,
+                            "y": 0
+                        },
+                        {
+                            "x": 0,
+                            "y": 480
+                        },
+                        {
+                            "x": 640,
+                            "y": 480
+                        },
+                        {
+                            "x": 640,
+                            "y": 0
+                        }
+                    ],
+                    "radius": 3,
+                    "subarea": 1,
+                    "id": "46a3ecf6-d476-48ea-9a0c-c095bf6bd5ac",
+                    "color": "#FF0000",
+                    "name": "no_parking_area",
+                    "tool": "polygon",
+                    "uuid": "4dcf5610-a8ea-11ec-b229-73a97896fcaa",
+                    "isClosed": true,
+                    "secondaryLabel": []
+                }
+            ],
+            "classifications": []
+        },
+        "LabelType": "submitted",
+        "Reviews": "wait_inspection",
+        "imagePath": "http:\/\/images.awkvector.comhttps:\/\/jxxl-tagtag-juexing.oss-cn-hangzhou.aliyuncs.com\/8673\/2022\/03\/18\/007f48e9cf3dd8d1f9cb3f346e93173d.jpg",
+        "imageWidth": 640,
+        "imageHeight": 480,
+        "imageSize": 109846,
+        "id": 3747148,
+        "imageName": "ISLab-04.jpg",
+        "DataSetName": "ISLab"
+    },
+    {
+        "ProjectName": "ISLab_mask_illegal",
+        "createdAt": "2022-03-21 15:34:09",
+        "Seconds": 82,
+        "Data": {
+            "svgArr": [
+                {
+                    "data": [
+                        {
+                            "x": 98.8500000000000227374,
+                            "y": 331
+                        },
+                        {
+                            "x": 427.850000000000022737,
+                            "y": 465
+                        },
+                        {
+                            "x": 556.850000000000022737,
+                            "y": 419
+                        },
+                        {
+                            "x": 656,
+                            "y": 474
+                        },
+                        {
+                            "x": 656,
+                            "y": 328
+                        },
+                        {
+                            "x": 344.850000000000022737,
+                            "y": 267
+                        }
+                    ],
+                    "radius": 3,
+                    "subarea": 1,
+                    "id": "46a3ecf6-d476-48ea-9a0c-c095bf6bd5ac",
+                    "color": "#FF0000",
+                    "name": "no_parking_area",
+                    "tool": "polygon",
+                    "uuid": "35805820-a8ea-11ec-b229-73a97896fcaa",
+                    "isClosed": true,
+                    "secondaryLabel": []
+                }
+            ],
+            "classifications": []
+        },
+        "LabelType": "submitted",
+        "Reviews": "wait_inspection",
+        "imagePath": "http:\/\/images.awkvector.comhttps:\/\/jxxl-tagtag-juexing.oss-cn-hangzhou.aliyuncs.com\/8673\/2022\/03\/18\/e0040efb2432ad56039b749d391501d7.jpg",
+        "imageWidth": 656,
+        "imageHeight": 546,
+        "imageSize": 142894,
+        "id": 3747147,
+        "imageName": "ISLab-03.jpg",
+        "DataSetName": "ISLab"
+    },
+    {
+        "ProjectName": "ISLab_mask_illegal",
+        "createdAt": "2022-03-21 15:34:09",
+        "Seconds": 53,
+        "Data": {
+            "svgArr": [
+                {
+                    "data": [
+                        {
+                            "x": 34.8500000000000227374,
+                            "y": 343
+                        },
+                        {
+                            "x": 371.850000000000022737,
+                            "y": 261
+                        },
+                        {
+                            "x": 656,
+                            "y": 319
+                        },
+                        {
+                            "x": 656,
+                            "y": 470
+                        },
+                        {
+                            "x": 606.850000000000022737,
+                            "y": 446
+                        },
+                        {
+                            "x": 550.850000000000022737,
+                            "y": 419
+                        },
+                        {
+                            "x": 383.850000000000022737,
+                            "y": 470
+                        }
+                    ],
+                    "radius": 3,
+                    "subarea": 1,
+                    "id": "46a3ecf6-d476-48ea-9a0c-c095bf6bd5ac",
+                    "color": "#FF0000",
+                    "name": "no_parking_area",
+                    "tool": "polygon",
+                    "uuid": "e1562bd0-a8e9-11ec-b229-73a97896fcaa",
+                    "isClosed": true,
+                    "secondaryLabel": []
+                }
+            ],
+            "classifications": []
+        },
+        "LabelType": "submitted",
+        "Reviews": "wait_inspection",
+        "imagePath": "http:\/\/images.awkvector.comhttps:\/\/jxxl-tagtag-juexing.oss-cn-hangzhou.aliyuncs.com\/8673\/2022\/03\/18\/7d4b769469d8f760a980507ee42ae125.jpg",
+        "imageWidth": 656,
+        "imageHeight": 546,
+        "imageSize": 125410,
+        "id": 3747146,
+        "imageName": "ISLab-02.jpg",
+        "DataSetName": "ISLab"
+    },
+    {
+        "ProjectName": "ISLab_mask_illegal",
+        "createdAt": "2022-03-21 15:34:09",
+        "Seconds": 49,
+        "Data": {
+            "svgArr": [
+                {
+                    "data": [
+                        {
+                            "x": 94.8500000000000227374,
+                            "y": 271
+                        },
+                        {
+                            "x": 251.850000000000022737,
+                            "y": 227
+                        },
+                        {
+                            "x": 331.850000000000022737,
+                            "y": 207
+                        },
+                        {
+                            "x": 372.850000000000022737,
+                            "y": 206
+                        },
+                        {
+                            "x": 632,
+                            "y": 256
+                        },
+                        {
+                            "x": 632,
+                            "y": 363
+                        },
+                        {
+                            "x": 599.850000000000022737,
+                            "y": 387
+                        },
+                        {
+                            "x": 536.850000000000022737,
+                            "y": 363
+                        },
+                        {
+                            "x": 414.850000000000022737,
+                            "y": 407
+                        },
+                        {
+                            "x": 84.8500000000000227374,
+                            "y": 277
+                        }
+                    ],
+                    "radius": 3,
+                    "subarea": 1,
+                    "id": "46a3ecf6-d476-48ea-9a0c-c095bf6bd5ac",
+                    "color": "#FF0000",
+                    "name": "no_parking_area",
+                    "tool": "polygon",
+                    "uuid": "c0bd4ac0-a8e9-11ec-b229-73a97896fcaa",
+                    "isClosed": true,
+                    "secondaryLabel": []
+                }
+            ],
+            "classifications": []
+        },
+        "LabelType": "submitted",
+        "Reviews": "wait_inspection",
+        "imagePath": "http:\/\/images.awkvector.comhttps:\/\/jxxl-tagtag-juexing.oss-cn-hangzhou.aliyuncs.com\/8673\/2022\/03\/18\/50a9f9e497ff7bb82a31cc1012e30ed3.jpg",
+        "imageWidth": 632,
+        "imageHeight": 474,
+        "imageSize": 108568,
+        "id": 3747145,
+        "imageName": "ISLab-01.jpg",
+        "DataSetName": "ISLab"
+    }
+]
